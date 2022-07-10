@@ -11,7 +11,7 @@ const error = (
 ) => {
   console.log(
     colors.red.bold(
-      "Name: " + err.name + " Message: " + err.message + " Stack:" + err.stack
+      "Name: " + err.name + " Message: " + err.message + " Stack: " + err.stack
     )
   );
 
