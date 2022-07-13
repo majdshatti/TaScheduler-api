@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const colors_1 = __importDefault(require("colors"));
 const error = (err, req, res, next) => {
-    console.log(colors_1.default.red.bold("Name: " + err.name + " Message: " + err.message + " Stack:" + err.stack));
+    console.log(colors_1.default.red.bold("Name: " + err.name + " Message: " + err.message + " Stack: " + err.stack));
     const statusCode = err.statusCode || 500;
     const response = {
         success: false,
