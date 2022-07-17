@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import ErrorResponse from "../utils/errorResponse";
+import ErrorResponse from "../utils/error/errorResponse";
 import IResponse from "../interfaces/response.interface";
 import colors from "colors";
 
