@@ -4,11 +4,19 @@ import slugify from "slugify";
 import ITask from "./../interfaces/task.interface";
 
 const taskSchema = new Schema<ITask>({
-  name: String,
-  slug: String,
-  description: String,
+  name: {
+    type: String,
+  },
+  slug: {
+    type: String,
+  },
+  description: {
+    type: String
+  },
   status: String,
-  image: String,
+  image: {
+    type: String
+  },
   startDate: Date,
   completeDate: Date,
   dueDate: Date,
