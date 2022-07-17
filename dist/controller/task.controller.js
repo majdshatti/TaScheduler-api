@@ -12,19 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addTask = void 0;
+exports.addTask = exports.getTasks = void 0;
 // Middlewares
 const async_1 = __importDefault(require("../middleware/async"));
 // Services
 const task_service_1 = require("../services/task.service");
-exports.addTask = (0, async_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, description } = req.body;
-    const task = yield (0, task_service_1.createTask)({
-        name: name,
-        description: description
+exports.getTasks = (0, async_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const tasks = yield (0, task_service_1.getAllTasks)();
+    res.status(200).json({
+        success: true,
+        data: tasks,
     });
+}));
+exports.addTask = (0, async_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    // Get body params
+    const { name, description, startDate, dueDate } = req.body;
+    const taskBody = {
+        name,
+        description,
+        startDate,
+        dueDate,
+        status: "Hold",
+    };
+    // Creating task
+    const task = yield (0, task_service_1.createTask)(taskBody);
     return res.status(201).json({
         success: true,
-        message: ""
+        message: "Task added.",
+        data: task,
     });
 }));
