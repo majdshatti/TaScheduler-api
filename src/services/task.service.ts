@@ -5,6 +5,10 @@ import Task from "../model/Task";
 import ITask from "../interfaces/task.interface";
 import IResponse from "../interfaces/response.interface";
 
+export const getAllTasks = () => {
+    return Task.find()
+}
+
 export const createTask = (data: ITask): Promise<ITask> | IResponse => {
     try{
         return Task.create({
