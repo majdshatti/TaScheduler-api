@@ -6,7 +6,7 @@ interface IError {
 
 interface IResponse {
   success: boolean;
-  message: string;
+  message?: string;
   data?: Object;
   errors?: IError[];
 }
