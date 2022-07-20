@@ -1,4 +1,6 @@
 import express from "express";
+// Cookies
+import cookies from "cookie-parser";
 // Environment variables
 import dotenv from "dotenv";
 // DB
@@ -10,6 +12,8 @@ import morgan from "morgan";
 import colors from "colors";
 // Cross-Origin Resource
 import cors from "cors";
+// Middlewares
+import { errorHandler } from "./middleware";
 
 const app = express();
 
@@ -22,6 +26,9 @@ connectDB();
 // Enable Cross-Origin Resource Sharing
 app.use(cors());
 
+// Cookies
+app.use(cookies());
+
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,6 +38,9 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api", routes);
+
+// Error handling middleware
+app.use(errorHandler);
 
 // Start listening
 const PORT = process.env.PORT || 5000;
@@ -42,8 +52,14 @@ const server = app.listen(PORT, () => {
   );
 });
 
-// Catch unhandled async/await errors
+// Catch unhandled promises errors
 process.on("unhandledRejection", (err: Error, promise) => {
+  console.log(`Error ${err.message}`);
+  server.close(() => process.exit(1));
+});
+
+// Catch un caught exceptions
+process.on("uncaughtException", (err: Error) => {
   console.log(`Error ${err.message}`);
   server.close(() => process.exit(1));
 });
