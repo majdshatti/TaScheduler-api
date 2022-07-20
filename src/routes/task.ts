@@ -4,11 +4,13 @@ import { Router } from "express";
 import { getTasks, addTask } from "../controller/task.controller";
 
 // Middlewares
-import validate from "../middleware/validationResults";
-import taskValidate from "../middleware/validators/task.validate";
+import { taskValidate, validationResults } from "../middleware/";
 
 const router = Router();
 
-router.route("/").get(getTasks).post(taskValidate(), validate(), addTask);
+router
+  .route("/")
+  .get(getTasks)
+  .post(taskValidate("create"), validationResults(), addTask);
 
 export default router;
