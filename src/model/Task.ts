@@ -3,30 +3,33 @@ import slugify from "slugify";
 
 import ITask from "./../interfaces/task.interface";
 
-const taskSchema = new Schema<ITask>({
-  name: {
-    type: String,
+const taskSchema = new Schema<ITask>(
+  {
+    name: {
+      type: String,
+    },
+    slug: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+    status: String,
+    image: {
+      type: String,
+    },
+    startDate: Date,
+    completeDate: Date,
+    dueDate: Date,
+    createdAt: {
+      type: Date,
+      immutable: true,
+      default: () => new Date(),
+    },
+    updatedAt: Date,
   },
-  slug: {
-    type: String,
-  },
-  description: {
-    type: String
-  },
-  status: String,
-  image: {
-    type: String
-  },
-  startDate: Date,
-  completeDate: Date,
-  dueDate: Date,
-  createdAt: {
-    type: Date,
-    immutable: true,
-    default: () => new Date(),
-  },
-  updatedAt: Date,
-});
+  { versionKey: false }
+);
 
 taskSchema.pre("save", function (next) {
   this.updatedAt = new Date();
