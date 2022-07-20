@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { body } from "express-validator";
 
 // Utility functions
-import { getErrorMessage } from "../error/errorMessages";
+import { getErrorMessage } from "../";
 
 let validate = (path: string) => {
   // Chainable object
@@ -19,8 +19,7 @@ let validate = (path: string) => {
     isRequired: function () {
       this.result = this.result
         .exists({ checkFalsy: true })
-        .withMessage(getErrorMessage("required", path))
-        .bail();
+        .withMessage(getErrorMessage("required", path));
       return this;
     },
 
@@ -40,7 +39,6 @@ let validate = (path: string) => {
           const document = await mongoose
             .model(model)
             .findOne({ [path]: value });
-
           // If a document is found then return error
           if (document) return Promise.reject(getErrorMessage("unique", path));
         } catch (error) {
@@ -67,6 +65,14 @@ let validate = (path: string) => {
         .isISO8601()
         .toDate()
         .withMessage(getErrorMessage("date", path))
+        .bail();
+      return this;
+    },
+
+    isEmail: function () {
+      this.result = this.result
+        .isEmail()
+        .withMessage(getErrorMessage("email", path))
         .bail();
       return this;
     },
