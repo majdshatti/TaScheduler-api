@@ -1,16 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-
 // Middlewares
-import asyncHandler from "../middleware/async";
-import { validationResult } from "express-validator";
-
+import { asyncHandler } from "../middleware";
 // Services
 import { getAllTasks, createTask } from "../services/task.service";
-
 // Interfaces
-import IResponse from "../interfaces/response.interface";
-import ITask from "../interfaces/task.interface";
-import ErrorResponse from "../utils/error/errorResponse";
+import { IResponse, ITask } from "../interfaces";
+// Utils
+import { ErrorResponse, getErrorMessage } from "../utils";
 
 export const getTasks = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +15,7 @@ export const getTasks = asyncHandler(
     res.status(200).json({
       success: true,
       data: tasks,
-    } as IResponse)
+    } as IResponse);
   }
 );
 
