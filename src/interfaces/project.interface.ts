@@ -1,22 +1,18 @@
 import { Document } from "mongoose";
 
 enum Status {
-  Overdue = "Overdue",
   Completed = "Completed",
+  Deleted = "Deleted",
   Hold = "Hold",
 }
 
-interface ITask extends Document {
+interface IProject extends Document {
   name: string;
   slug?: string;
   description?: string;
   status: Status;
-  image?: string;
-  startDate: Date;
-  dueDate: Date;
-  completeDate?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export default ITask;
+export default IProject;

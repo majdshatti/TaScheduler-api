@@ -1,3 +1,5 @@
+import { langType } from "./../types";
+
 interface IError {
   message: string;
   value?: string;
@@ -6,7 +8,7 @@ interface IError {
 
 interface IResponse {
   success: boolean;
-  message?: string;
+  message?: string | langType;
   data?: Object;
   errors?: IError[];
 }
