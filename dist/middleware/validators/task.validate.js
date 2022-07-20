@@ -1,15 +1,17 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const validate_1 = __importDefault(require("../../utils/validation/validate"));
-const taskValidate = () => {
-    return [
-        (0, validate_1.default)("name").isUnique("Task").isRequired().isString().exec(),
-        (0, validate_1.default)("description").isLength(20, 200).exec(),
-        (0, validate_1.default)("startDate").isDate().exec(),
-        (0, validate_1.default)("dueDate").isDate().exec(),
-    ];
+const utils_1 = require("../../utils");
+const taskValidate = (validationCase) => {
+    switch (validationCase) {
+        case "create":
+            return [
+                (0, utils_1.validate)("name").isUnique("Task").isRequired().isString().exec(),
+                (0, utils_1.validate)("description").isLength(20, 200).exec(),
+                (0, utils_1.validate)("startDate").isDate().exec(),
+                (0, utils_1.validate)("dueDate").isDate().exec(),
+            ];
+        case "edit":
+            return [];
+    }
 };
 exports.default = taskValidate;

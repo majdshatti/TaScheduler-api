@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const express_validator_1 = require("express-validator");
 // Utility functions
-const errorMessages_1 = require("../error/errorMessages");
+const __1 = require("../");
 let validate = (path) => {
     // Chainable object
     let chainablePath = {
@@ -29,15 +29,14 @@ let validate = (path) => {
         isRequired: function () {
             this.result = this.result
                 .exists({ checkFalsy: true })
-                .withMessage((0, errorMessages_1.getErrorMessage)("required", path))
-                .bail();
+                .withMessage((0, __1.getErrorMessage)("required", path));
             return this;
         },
         //* Check string format
         isString: function () {
             this.result = this.result
                 .isString()
-                .withMessage((0, errorMessages_1.getErrorMessage)("string", path))
+                .withMessage((0, __1.getErrorMessage)("string", path))
                 .bail();
             return this;
         },
@@ -50,7 +49,7 @@ let validate = (path) => {
                         .findOne({ [path]: value });
                     // If a document is found then return error
                     if (document)
-                        return Promise.reject((0, errorMessages_1.getErrorMessage)("unique", path));
+                        return Promise.reject((0, __1.getErrorMessage)("unique", path));
                 }
                 catch (error) {
                     return Promise.reject(error);
@@ -62,7 +61,7 @@ let validate = (path) => {
         isLength: function (minLength, maxLength) {
             this.result = this.result
                 .isLength({ min: minLength, max: maxLength })
-                .withMessage((0, errorMessages_1.getErrorMessage)("betweenLength", path, `${minLength}, ${maxLength}`))
+                .withMessage((0, __1.getErrorMessage)("betweenLength", path, `${minLength}, ${maxLength}`))
                 .bail();
             return this;
         },
@@ -71,7 +70,14 @@ let validate = (path) => {
             this.result = this.result
                 .isISO8601()
                 .toDate()
-                .withMessage((0, errorMessages_1.getErrorMessage)("date", path))
+                .withMessage((0, __1.getErrorMessage)("date", path))
+                .bail();
+            return this;
+        },
+        isEmail: function () {
+            this.result = this.result
+                .isEmail()
+                .withMessage((0, __1.getErrorMessage)("email", path))
                 .bail();
             return this;
         },

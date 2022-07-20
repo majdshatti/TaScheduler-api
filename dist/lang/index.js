@@ -1,12 +1,15 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLanguageData = exports.enData = exports.arData = void 0;
-const ar_lang_1 = __importDefault(require("./ar.lang"));
-exports.arData = ar_lang_1.default;
-const en_lang_1 = __importDefault(require("./en.lang"));
-exports.enData = en_lang_1.default;
+exports.enSuccessData = exports.getEnData = exports.enErrorData = exports.enTerms = exports.arSuccessData = exports.getArData = exports.arErrorData = exports.arTerms = exports.getLanguageData = void 0;
+const ar_lang_1 = require("./ar.lang");
+Object.defineProperty(exports, "arErrorData", { enumerable: true, get: function () { return ar_lang_1.arErrorData; } });
+Object.defineProperty(exports, "arTerms", { enumerable: true, get: function () { return ar_lang_1.arTerms; } });
+Object.defineProperty(exports, "arSuccessData", { enumerable: true, get: function () { return ar_lang_1.arSuccessData; } });
+const en_lang_1 = require("./en.lang");
+Object.defineProperty(exports, "enErrorData", { enumerable: true, get: function () { return en_lang_1.enErrorData; } });
+Object.defineProperty(exports, "enTerms", { enumerable: true, get: function () { return en_lang_1.enTerms; } });
+Object.defineProperty(exports, "enSuccessData", { enumerable: true, get: function () { return en_lang_1.enSuccessData; } });
 const get_lang_1 = require("./get.lang");
 Object.defineProperty(exports, "getLanguageData", { enumerable: true, get: function () { return get_lang_1.getLanguageData; } });
+Object.defineProperty(exports, "getArData", { enumerable: true, get: function () { return get_lang_1.getArData; } });
+Object.defineProperty(exports, "getEnData", { enumerable: true, get: function () { return get_lang_1.getEnData; } });

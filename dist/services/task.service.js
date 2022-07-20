@@ -11,18 +11,9 @@ const getAllTasks = () => {
 };
 exports.getAllTasks = getAllTasks;
 const createTask = (data) => {
-    try {
-        return Task_1.default.create({
-            name: data.name,
-            description: data.description
-        });
-    }
-    catch (error) {
-        const errorObject = {
-            success: false,
-            message: error.message
-        };
-        return errorObject;
-    }
+    return Task_1.default.create({
+        name: data.name,
+        description: data.description,
+    });
 };
 exports.createTask = createTask;

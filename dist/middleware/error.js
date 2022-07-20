@@ -9,7 +9,7 @@ const error = (err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const response = {
         success: false,
-        message: err.message,
+        message: err.multiLangMessage,
     };
     res.status(statusCode).json(response);
 };
