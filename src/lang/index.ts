@@ -1,5 +1,15 @@
-import arData from "./ar.lang";
-import enData from "./en.lang";
-import { getLanguageData } from "./get.lang";
+import { arErrorData, arTerms, arSuccessData } from "./ar.lang";
+import { enErrorData, enTerms, enSuccessData } from "./en.lang";
+import { getLanguageData, getArData, getEnData } from "./get.lang";
 
-export { arData, enData, getLanguageData };
+export {
+  getLanguageData,
+  arTerms,
+  arErrorData,
+  getArData,
+  arSuccessData,
+  enTerms,
+  enErrorData,
+  getEnData,
+  enSuccessData,
+};
