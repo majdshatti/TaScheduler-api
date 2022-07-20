@@ -14,12 +14,11 @@ const error = (
       "Name: " + err.name + " Message: " + err.message + " Stack: " + err.stack
     )
   );
-
   const statusCode = err.statusCode || 500;
 
   const response: IResponse = {
     success: false,
-    message: err.message,
+    message: err.multiLangMessage,
   };
 
   res.status(statusCode).json(response);
