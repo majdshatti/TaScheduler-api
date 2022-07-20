@@ -1,9 +1,12 @@
 import { Router } from "express";
 
-import task from "./routes/task";
+// Routers
+import { taskRouter, authRouter, projectRouter } from "./routes/";
 
 const router = Router();
 
-router.use("/task", task);
+router.use("/task", taskRouter);
+router.use("/auth", authRouter);
+router.use("/project", projectRouter);
 
 export default router;
