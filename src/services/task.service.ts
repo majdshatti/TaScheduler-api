@@ -6,21 +6,12 @@ import ITask from "../interfaces/task.interface";
 import IResponse from "../interfaces/response.interface";
 
 export const getAllTasks = () => {
-    return Task.find()
-}
+  return Task.find();
+};
 
-export const createTask = (data: ITask): Promise<ITask> | IResponse => {
-    try{
-        return Task.create({
-            name: data.name,
-            description: data.description
-        })
-    } catch (error: any){
-        const errorObject: IResponse = {
-            success: false,
-            message: error.message
-        }
-
-        return errorObject
-    }
-}
+export const createTask = (data: ITask): Promise<ITask> => {
+  return Task.create({
+    name: data.name,
+    description: data.description,
+  });
+};
