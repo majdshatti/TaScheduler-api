@@ -1,10 +1,14 @@
+import { langType } from "../../types";
+
 class ErrorResponse extends Error {
-    statusCode: number;
-    
-    constructor(message: string, statusCode: number){
-        super(message)
-        this.statusCode = statusCode
-    }
+  statusCode: number;
+  multiLangMessage: langType;
+
+  constructor(message: langType, statusCode: number) {
+    super(message.en);
+    this.multiLangMessage = message;
+    this.statusCode = statusCode;
+  }
 }
 
-export default ErrorResponse
+export default ErrorResponse;
