@@ -23,7 +23,14 @@ const taskValidate = (validationCase) => {
                 (0, utils_1.validate)("startDate").isDate().isStartDateSmaller().exec(),
             ];
         case "edit":
-            return [];
+            return [
+                (0, utils_1.validate)("name").optional().isUnique("Task").isString().exec(),
+                (0, utils_1.validate)("description").isLength(20, 200).exec(),
+            ];
+        case "addTodo":
+            return [(0, utils_1.validate)("paragraph").isRequired().isString().exec()];
+        case "removeTodo":
+            return [(0, utils_1.validate)("todoId").isRequired().isObjectId().exec()];
     }
 };
 exports.default = taskValidate;

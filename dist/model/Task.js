@@ -5,12 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const slugify_1 = __importDefault(require("slugify"));
+// Schemas
+const _1 = require("./");
+// Interfaces
 const interfaces_1 = require("./../interfaces");
-const todoSchema = new mongoose_1.Schema({
-    name: String,
-    slug: String,
-    isChecked: Boolean,
-}, { _id: false, versionKey: false });
 const taskSchema = new mongoose_1.Schema({
     name: String,
     slug: String,
@@ -20,7 +18,9 @@ const taskSchema = new mongoose_1.Schema({
     startDate: Date,
     completeDate: Date,
     dueDate: Date,
-    todos: [todoSchema],
+    todos: {
+        type: [_1.todoSchema],
+    },
     project: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Project",

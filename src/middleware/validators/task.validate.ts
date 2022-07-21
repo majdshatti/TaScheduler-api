@@ -1,6 +1,8 @@
 import { validate } from "../../utils";
 
-const taskValidate = (validationCase: "edit" | "create") => {
+const taskValidate = (
+  validationCase: "edit" | "create" | "addTodo" | "removeTodo"
+) => {
   switch (validationCase) {
     case "create":
       return [
@@ -22,7 +24,14 @@ const taskValidate = (validationCase: "edit" | "create") => {
         validate("startDate").isDate().isStartDateSmaller().exec(),
       ];
     case "edit":
-      return [];
+      return [
+        validate("name").optional().isUnique("Task").isString().exec(),
+        validate("description").isLength(20, 200).exec(),
+      ];
+    case "addTodo":
+      return [validate("paragraph").isRequired().isString().exec()];
+    case "removeTodo":
+      return [validate("todoId").isRequired().isObjectId().exec()];
   }
 };
 

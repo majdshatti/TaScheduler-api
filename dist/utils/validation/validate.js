@@ -20,13 +20,13 @@ const __1 = require("../");
 let validate = (path) => {
     // Chainable object
     let chainablePath = {
-        result: (0, express_validator_1.body)(),
+        result: (0, express_validator_1.check)(),
         //************************************************/
         //************ GENERAL VALIDATIONS ***************/
         //************************************************/
         //* Setting up Body() for express validator
         path: function () {
-            this.result = (0, express_validator_1.body)(path);
+            this.result = (0, express_validator_1.check)(path);
             return this;
         },
         //* Make sure a path is sent from the client
@@ -35,6 +35,10 @@ let validate = (path) => {
                 .exists({ checkFalsy: true })
                 .withMessage((0, __1.getErrorMessage)("required", path))
                 .bail();
+            return this;
+        },
+        optional: function () {
+            this.result = this.result.optional();
             return this;
         },
         //* Check string format

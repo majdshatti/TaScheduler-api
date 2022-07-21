@@ -1,16 +1,11 @@
 import { Schema, model } from "mongoose";
 import slugify from "slugify";
 
-import { ITask, ITodo, Status } from "./../interfaces";
+// Schemas
+import { todoSchema } from "./";
 
-const todoSchema = new Schema<ITodo>(
-  {
-    name: String,
-    slug: String,
-    isChecked: Boolean,
-  },
-  { _id: false, versionKey: false }
-);
+// Interfaces
+import { ITask, Status } from "./../interfaces";
 
 const taskSchema = new Schema<ITask>(
   {
@@ -22,7 +17,9 @@ const taskSchema = new Schema<ITask>(
     startDate: Date,
     completeDate: Date,
     dueDate: Date,
-    todos: [todoSchema],
+    todos: {
+      type: [todoSchema],
+    },
     project: {
       type: Schema.Types.ObjectId,
       ref: "Project",

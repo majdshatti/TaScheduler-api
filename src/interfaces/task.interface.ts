@@ -1,16 +1,12 @@
 import { Document, ObjectId } from "mongoose";
 
+import { ITodo } from "./";
+
 enum Status {
   Overdue = "Overdue",
   Completed = "Completed",
   Hold = "Hold",
   Active = "Active",
-}
-
-interface ITodo extends Document {
-  name: string;
-  slug?: string;
-  isChecked?: boolean;
 }
 
 interface ITask extends Document {

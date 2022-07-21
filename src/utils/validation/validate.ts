@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import ObjectId from "mongoose";
-import { body } from "express-validator";
+import { check } from "express-validator";
 
 // Utility functions
 import { getErrorMessage } from "../";
@@ -8,7 +8,7 @@ import { getErrorMessage } from "../";
 let validate = (path: string) => {
   // Chainable object
   let chainablePath = {
-    result: body(),
+    result: check(),
 
     //************************************************/
     //************ GENERAL VALIDATIONS ***************/
@@ -16,7 +16,7 @@ let validate = (path: string) => {
 
     //* Setting up Body() for express validator
     path: function () {
-      this.result = body(path);
+      this.result = check(path);
       return this;
     },
 
@@ -26,6 +26,11 @@ let validate = (path: string) => {
         .exists({ checkFalsy: true })
         .withMessage(getErrorMessage("required", path))
         .bail();
+      return this;
+    },
+
+    optional: function () {
+      this.result = this.result.optional();
       return this;
     },
 
