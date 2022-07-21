@@ -6,7 +6,7 @@ import { getAllTasks, createTask } from "../services/task.service";
 // Interfaces
 import { IResponse, ITask } from "../interfaces";
 // Utils
-import { ErrorResponse, getErrorMessage } from "../utils";
+import { ErrorResponse, getErrorMessage, getSuccessMessage } from "../utils";
 
 export const getTasks = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -22,22 +22,14 @@ export const getTasks = asyncHandler(
 export const addTask = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // Get body params
-    const { name, description, startDate, dueDate } = req.body as ITask;
-
-    const taskBody = {
-      name,
-      description,
-      startDate,
-      dueDate,
-      status: "Hold",
-    } as ITask;
+    const bodyObject = req.body as ITask;
 
     // Creating task
-    const task = await createTask(taskBody);
+    const task = await createTask(bodyObject);
 
     return res.status(201).json({
       success: true,
-      message: "Task added.",
+      message: getSuccessMessage("create", "task"),
       data: task,
     } as IResponse);
   }
