@@ -1,9 +1,8 @@
 // Models
 import Task from "../model/Task";
 
-// Interface
-import ITask from "../interfaces/task.interface";
-import IResponse from "../interfaces/response.interface";
+// Interfaces
+import { ITask, IResponse } from "../interfaces";
 
 export const getAllTasks = () => {
   return Task.find();
