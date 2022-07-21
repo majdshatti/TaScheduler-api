@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
+const mongoose_2 = __importDefault(require("mongoose"));
 const express_validator_1 = require("express-validator");
 // Utility functions
 const __1 = require("../");
@@ -20,6 +21,9 @@ let validate = (path) => {
     // Chainable object
     let chainablePath = {
         result: (0, express_validator_1.body)(),
+        //************************************************/
+        //************ GENERAL VALIDATIONS ***************/
+        //************************************************/
         //* Setting up Body() for express validator
         path: function () {
             this.result = (0, express_validator_1.body)(path);
@@ -29,7 +33,8 @@ let validate = (path) => {
         isRequired: function () {
             this.result = this.result
                 .exists({ checkFalsy: true })
-                .withMessage((0, __1.getErrorMessage)("required", path));
+                .withMessage((0, __1.getErrorMessage)("required", path))
+                .bail();
             return this;
         },
         //* Check string format
@@ -42,7 +47,8 @@ let validate = (path) => {
         },
         //* Check if a document is already exists
         isUnique: function (model) {
-            this.result = this.result.custom((value) => __awaiter(this, void 0, void 0, function* () {
+            this.result = this.result
+                .custom((value) => __awaiter(this, void 0, void 0, function* () {
                 try {
                     const document = yield mongoose_1.default
                         .model(model)
@@ -54,7 +60,8 @@ let validate = (path) => {
                 catch (error) {
                     return Promise.reject(error);
                 }
-            }));
+            }))
+                .bail();
             return this;
         },
         //* Check minimum characters allowed
@@ -74,10 +81,60 @@ let validate = (path) => {
                 .bail();
             return this;
         },
+        //* Check if email
         isEmail: function () {
             this.result = this.result
                 .isEmail()
                 .withMessage((0, __1.getErrorMessage)("email", path))
+                .bail();
+            return this;
+        },
+        //* Check if document exists in the db
+        isExist: function (model, field) {
+            this.result = this.result
+                .custom((value) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    const document = yield mongoose_1.default
+                        .model(model)
+                        .findOne({ [field]: value })
+                        .countDocuments();
+                    // If a document is found then return error
+                    if (document < 1)
+                        return Promise.reject((0, __1.getErrorMessage)("exist", path));
+                }
+                catch (error) {
+                    return Promise.reject(error);
+                }
+            }))
+                .bail();
+            return this;
+        },
+        isObjectId: function () {
+            this.result = this.result
+                .custom((value) => __awaiter(this, void 0, void 0, function* () {
+                if (!mongoose_2.default.isValidObjectId(value))
+                    return Promise.reject("Not valid object ID");
+            }))
+                .bail();
+            return this;
+        },
+        //************************************************/
+        //********* PROJECT CUSTOM VALIDATIONS ***********/
+        //************************************************/
+        //* Check if startDate is smaller than dueDate
+        isStartDateSmaller: function () {
+            this.result = this.result
+                .custom((value, { req }) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    const startDate = value.getTime();
+                    const dueDate = req.body.dueDate.getTime();
+                    if (startDate >= dueDate)
+                        return Promise.reject((0, __1.getErrorMessage)("exist", path));
+                }
+                catch (err) {
+                    return Promise.reject(err);
+                }
+            }))
                 .bail();
             return this;
         },

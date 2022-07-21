@@ -14,6 +14,8 @@ exports.addTask = exports.getTasks = void 0;
 const middleware_1 = require("../middleware");
 // Services
 const task_service_1 = require("../services/task.service");
+// Utils
+const utils_1 = require("../utils");
 exports.getTasks = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const tasks = yield (0, task_service_1.getAllTasks)();
     res.status(200).json({
@@ -23,19 +25,18 @@ exports.getTasks = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(
 }));
 exports.addTask = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     // Get body params
-    const { name, description, startDate, dueDate } = req.body;
-    const taskBody = {
-        name,
-        description,
-        startDate,
-        dueDate,
-        status: "Hold",
-    };
+    const bodyObject = req.body;
+    let status = "Hold";
+    const startDate = new Date(req.body.startDate).getTime();
+    const currentDate = new Date().getTime();
+    if (startDate <= currentDate)
+        status = "Active";
+    console.log(bodyObject);
     // Creating task
-    const task = yield (0, task_service_1.createTask)(taskBody);
+    const task = yield (0, task_service_1.createTask)(bodyObject);
     return res.status(201).json({
         success: true,
-        message: "Task added.",
+        message: (0, utils_1.getSuccessMessage)("create", "task"),
         data: task,
     });
 }));

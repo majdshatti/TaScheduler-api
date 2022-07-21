@@ -5,23 +5,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const slugify_1 = __importDefault(require("slugify"));
+const interfaces_1 = require("./../interfaces");
+const todoSchema = new mongoose_1.Schema({
+    name: String,
+    slug: String,
+    isChecked: Boolean,
+}, { _id: false, versionKey: false });
 const taskSchema = new mongoose_1.Schema({
-    name: {
-        type: String,
-    },
-    slug: {
-        type: String,
-    },
-    description: {
-        type: String,
-    },
+    name: String,
+    slug: String,
+    description: String,
     status: String,
-    image: {
-        type: String,
-    },
+    image: String,
     startDate: Date,
     completeDate: Date,
     dueDate: Date,
+    todos: [todoSchema],
+    project: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Project",
+    },
+    user: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
+    },
     createdAt: {
         type: Date,
         immutable: true,
@@ -32,6 +39,12 @@ const taskSchema = new mongoose_1.Schema({
 taskSchema.pre("save", function (next) {
     this.updatedAt = new Date();
     this.slug = (0, slugify_1.default)(this.name, { lower: true });
+    let status = interfaces_1.Status.Hold;
+    const startDate = new Date(this.startDate).getTime();
+    const currentDate = new Date().getTime();
+    if (startDate <= currentDate)
+        status = interfaces_1.Status.Active;
+    this.status = interfaces_1.Status.Active;
     next();
 });
 const Task = (0, mongoose_1.model)("Task", taskSchema);
