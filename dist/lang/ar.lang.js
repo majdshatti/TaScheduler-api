@@ -41,6 +41,9 @@ const arErrorData = (path, value) => {
         betweenLength: `حرف ${value !== null && value !== void 0 ? value : "200, 20"} على ما بين ${translate(path)} يجب أن يحتوي`,
         credentials: `.!خطأ في اسم المستخدم أو كلمة مرور`,
         exist: `!.${path} غير موجود`,
+        operation: `لا يمكن إجراء العملية`,
+        statusSame: `${value} ${path} له بالفعل نفس الوضع`,
+        serverError: `حدث خطأ أثناء محاولة إجراء هذه العملية`,
     };
     return sentances;
 };

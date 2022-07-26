@@ -9,11 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTask = exports.editTask = exports.createTask = exports.getSingleTask = exports.getTasks = void 0;
+exports.completeTask = exports.deleteTask = exports.editTask = exports.createTask = exports.getSingleTask = exports.getTasks = void 0;
 // Middlewares
 const middleware_1 = require("../middleware");
 // Services
 const task_service_1 = require("../services/task.service");
+// Interfaces
+const interfaces_1 = require("../interfaces");
 // Utils
 const utils_1 = require("../utils");
 //* @desc Get all tasks
@@ -80,5 +82,17 @@ exports.deleteTask = (0, middleware_1.asyncHandler)((req, res, next) => __awaite
     return res.status(201).json({
         success: true,
         message: (0, utils_1.getSuccessMessage)("delete", "task"),
+    });
+}));
+//* @desc Change a task status
+//* @route PUT /api/task/:slug/stauts
+//* @access private
+exports.completeTask = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let task = req.body.validationResults.Task;
+    task = yield (0, task_service_1.changeStatus)(task, interfaces_1.Status.Completed);
+    return res.status(201).json({
+        success: true,
+        data: task,
+        message: (0, utils_1.getSuccessMessage)("edit", "task"),
     });
 }));

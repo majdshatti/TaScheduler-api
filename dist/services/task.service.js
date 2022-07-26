@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTaskBySlug = exports.updateTask = exports.addTask = exports.getTaskBySlug = exports.getAllTasks = void 0;
+exports.changeStatus = exports.deleteTaskBySlug = exports.updateTask = exports.addTask = exports.getTaskBySlug = exports.getAllTasks = void 0;
 const slugify_1 = __importDefault(require("slugify"));
 // Models
 const model_1 = require("../model");
+const utils_1 = require("../utils");
 //* @desc: Get all tasks service
 const getAllTasks = () => {
-    return model_1.Task.find();
+    return model_1.Task.find().populate("user");
 };
 exports.getAllTasks = getAllTasks;
 //* @desc: Get single task service
@@ -28,10 +29,7 @@ const getTaskBySlug = (slug) => {
 exports.getTaskBySlug = getTaskBySlug;
 //* @desc: Create a task service
 const addTask = (data) => {
-    return model_1.Task.create({
-        name: data.name,
-        description: data.description,
-    });
+    return model_1.Task.create(data);
 };
 exports.addTask = addTask;
 //* @desc: Update a task service
@@ -66,3 +64,16 @@ const deleteTaskBySlug = (slug) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.deleteTaskBySlug = deleteTaskBySlug;
+//* @desc: Update the status of a task
+const changeStatus = (task, status) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return model_1.Task.findOneAndUpdate({ _id: task._id }, { status: status }, { new: true });
+    }
+    catch (err) {
+        Promise.reject({
+            name: "Service Error",
+            multiLangMessage: (0, utils_1.getErrorMessage)("operation", "complete task"),
+        });
+    }
+});
+exports.changeStatus = changeStatus;

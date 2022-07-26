@@ -2,11 +2,12 @@ import slugify from "slugify";
 // Models
 import { Task } from "../model";
 // Interfaces
-import { ITask } from "../interfaces";
+import { ITask, Status } from "../interfaces";
+import { getErrorMessage } from "../utils";
 
 //* @desc: Get all tasks service
 export const getAllTasks = () => {
-  return Task.find();
+  return Task.find().populate("user");
 };
 
 //* @desc: Get single task service
@@ -16,10 +17,7 @@ export const getTaskBySlug = (slug: string) => {
 
 //* @desc: Create a task service
 export const addTask = (data: ITask): Promise<ITask> => {
-  return Task.create({
-    name: data.name,
-    description: data.description,
-  });
+  return Task.create(data);
 };
 
 //* @desc: Update a task service
@@ -50,5 +48,21 @@ export const deleteTaskBySlug = async (slug: string) => {
     return true;
   } catch (err) {
     return false;
+  }
+};
+
+//* @desc: Update the status of a task
+export const changeStatus = async (task: ITask, status: Status) => {
+  try {
+    return Task.findOneAndUpdate(
+      { _id: task._id },
+      { status: status },
+      { new: true }
+    );
+  } catch (err) {
+    Promise.reject({
+      name: "Service Error",
+      multiLangMessage: getErrorMessage("operation", "complete task"),
+    });
   }
 };

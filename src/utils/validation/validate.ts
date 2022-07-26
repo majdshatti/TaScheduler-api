@@ -93,18 +93,23 @@ let validate = (path: string) => {
     },
 
     //* Check if document exists in the db
-    isExist: function (model: string, field: string) {
+    isExist: function (
+      model: string,
+      field: string,
+      returnData: boolean = false
+    ) {
       this.result = this.result
-        .custom(async value => {
+        .custom(async (value, { req }) => {
           try {
             const document = await mongoose
               .model(model)
-              .findOne({ [field]: value })
-              .countDocuments();
+              .findOne({ [field]: value });
 
             // If a document is found then return error
-            if (document < 1)
+            if (!document)
               return Promise.reject(getErrorMessage("exist", path));
+
+            if (returnData) req.body.validationResults = { [model]: document };
           } catch (error) {
             return Promise.reject(error);
           }
@@ -138,6 +143,31 @@ let validate = (path: string) => {
               return Promise.reject(getErrorMessage("exist", path));
           } catch (err) {
             return Promise.reject(err);
+          }
+        })
+        .bail();
+
+      return this;
+    },
+
+    //! THIS FUNCTION CANNOT BE USED WITH `ISEXIST FUNCTION` WITH RETURN TRUE FOR DATA
+    //* Is status already the same
+    isTaskStatusTheSame: function (status: string) {
+      this.result = this.result
+        .custom(async (value, { req }) => {
+          console.log(value);
+          try {
+            const task = req.body.validationResults.Task;
+
+            if (!task) return Promise.reject(getErrorMessage("exist", "task"));
+
+            if (task.status == status)
+              return Promise.reject(
+                getErrorMessage("statusSame", "task", "Completed")
+              );
+          } catch (err) {
+            console.log(err);
+            return Promise.reject(getErrorMessage("serverError", "task"));
           }
         })
         .bail();

@@ -37,6 +37,9 @@ const enErrorData = (path, value) => {
         betweenLength: `Must contain between ${value !== null && value !== void 0 ? value : "20, to 200"} characters`,
         credentials: `Invalid username or password!.`,
         exist: `${path} does not exist!.`,
+        operation: `Operation ${path} could not be performed, try again later.`,
+        statusSame: `${path} is already has the same status: ${value}`,
+        serverError: `An error occured while trying to perform this operation.`,
     };
     return sentances;
 };

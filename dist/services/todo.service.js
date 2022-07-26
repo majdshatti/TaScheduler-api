@@ -43,29 +43,19 @@ const pullTodo = (taskSlug, todoId) => __awaiter(void 0, void 0, void 0, functio
         return task;
     }
     catch (err) {
-        console.log(err);
         return false;
     }
 });
 exports.pullTodo = pullTodo;
 //* @desc: Edit todo
-const toggleTodo = (taskSlug, todoId) => __awaiter(void 0, void 0, void 0, function* () {
+const toggleTodo = (task, todoIndex) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let task = yield model_1.Task.findOne({ slug: taskSlug });
-        if (!task)
-            return false;
-        if (task === null || task === void 0 ? void 0 : task.todos) {
-            for (const todo of task.todos) {
-                if (todo._id.equals(todoId)) {
-                    todo.isChecked = !todo.isChecked;
-                }
-            }
-        }
+        task.todos[todoIndex].isChecked = !task.todos[todoIndex].isChecked;
+        task.markModified("todos");
         return yield task.save();
     }
     catch (err) {
-        console.log(err);
-        return false;
+        return Promise.reject("");
     }
 });
 exports.toggleTodo = toggleTodo;

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 // Models
 import { Task } from "../model";
 // Interfaces
-import { ITodo } from "../interfaces";
+import { ITask, ITodo } from "../interfaces";
 
 //* @desc: Add todo to task
 export const pushTodo = async (taskSlug: string, paragraph: string) => {
@@ -40,29 +40,18 @@ export const pullTodo = async (taskSlug: string, todoId: string) => {
 
     return task;
   } catch (err) {
-    console.log(err);
     return false;
   }
 };
 
 //* @desc: Edit todo
-export const toggleTodo = async (taskSlug: string, todoId: string) => {
+export const toggleTodo = async (task: ITask, todoIndex: number) => {
   try {
-    let task = await Task.findOne({ slug: taskSlug });
-
-    if (!task) return false;
-
-    if (task?.todos) {
-      for (const todo of task.todos) {
-        if (todo._id.equals(todoId)) {
-          todo.isChecked = !todo.isChecked;
-        }
-      }
-    }
+    task.todos[todoIndex].isChecked = !task.todos[todoIndex].isChecked;
+    task.markModified("todos");
 
     return await task.save();
   } catch (err) {
-    console.log(err);
-    return false;
+    return Promise.reject("");
   }
 };

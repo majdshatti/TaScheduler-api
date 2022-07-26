@@ -14,8 +14,15 @@ import colors from "colors";
 import cors from "cors";
 // Middlewares
 import { errorHandler } from "./middleware";
+// Cron
+import cron from "node-cron";
+// Services
+import { checkTaskStatus } from "./schedulers";
+import { socketConnection } from "./utils";
 
 const app = express();
+// Server
+const httpServer = require("http").Server(app);
 
 // Load environment variables
 dotenv.config({ path: __dirname + "/config/config.env" });
@@ -33,6 +40,12 @@ app.use(cookies());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Socketing
+socketConnection(httpServer);
+
+// Schedule Task Checking
+cron.schedule("*/10 * * * * *", checkTaskStatus());
+
 // Logger
 app.use(morgan("dev"));
 
@@ -44,7 +57,7 @@ app.use(errorHandler);
 
 // Start listening
 const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => {
+const server = httpServer.listen(PORT, () => {
   console.log(
     colors.yellow.bold(
       `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`

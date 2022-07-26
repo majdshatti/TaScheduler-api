@@ -18,6 +18,9 @@ export type errorSentances = {
   betweenLength: string;
   credentials: string;
   exist: string;
+  operation: string;
+  statusSame: string;
+  serverError: string;
 };
 
 export type successSentances = {

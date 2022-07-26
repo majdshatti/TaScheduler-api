@@ -94,17 +94,18 @@ let validate = (path) => {
             return this;
         },
         //* Check if document exists in the db
-        isExist: function (model, field) {
+        isExist: function (model, field, returnData = false) {
             this.result = this.result
-                .custom((value) => __awaiter(this, void 0, void 0, function* () {
+                .custom((value, { req }) => __awaiter(this, void 0, void 0, function* () {
                 try {
                     const document = yield mongoose_1.default
                         .model(model)
-                        .findOne({ [field]: value })
-                        .countDocuments();
+                        .findOne({ [field]: value });
                     // If a document is found then return error
-                    if (document < 1)
+                    if (!document)
                         return Promise.reject((0, __1.getErrorMessage)("exist", path));
+                    if (returnData)
+                        req.body.validationResults = { [model]: document };
                 }
                 catch (error) {
                     return Promise.reject(error);
@@ -137,6 +138,27 @@ let validate = (path) => {
                 }
                 catch (err) {
                     return Promise.reject(err);
+                }
+            }))
+                .bail();
+            return this;
+        },
+        //! THIS FUNCTION CANNOT BE USED WITH `ISEXIST FUNCTION` WITH RETURN TRUE FOR DATA
+        //* Is status already the same
+        isTaskStatusTheSame: function (status) {
+            this.result = this.result
+                .custom((value, { req }) => __awaiter(this, void 0, void 0, function* () {
+                console.log(value);
+                try {
+                    const task = req.body.validationResults.Task;
+                    if (!task)
+                        return Promise.reject((0, __1.getErrorMessage)("exist", "task"));
+                    if (task.status == status)
+                        return Promise.reject((0, __1.getErrorMessage)("statusSame", "task", "Completed"));
+                }
+                catch (err) {
+                    console.log(err);
+                    return Promise.reject((0, __1.getErrorMessage)("serverError", "task"));
                 }
             }))
                 .bail();

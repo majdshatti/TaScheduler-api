@@ -39,13 +39,20 @@ const taskSchema = new mongoose_1.Schema({
 taskSchema.pre("save", function (next) {
     this.updatedAt = new Date();
     this.slug = (0, slugify_1.default)(this.name, { lower: true });
-    let status = interfaces_1.Status.Hold;
-    const startDate = new Date(this.startDate).getTime();
-    const currentDate = new Date().getTime();
-    if (startDate <= currentDate)
-        status = interfaces_1.Status.Active;
-    this.status = interfaces_1.Status.Active;
+    this.status = setInitStatus(this.startDate, this.dueDate);
     next();
 });
+//* @desc Set an initial value for the status of a task
+const setInitStatus = function (sDate, eDate) {
+    let initStatus = interfaces_1.Status.Active;
+    const startDate = new Date(sDate).getTime();
+    const dueDate = new Date(eDate).getTime();
+    const currentDate = new Date().getTime();
+    if (currentDate < startDate)
+        initStatus = interfaces_1.Status.Hold;
+    if (currentDate > dueDate)
+        initStatus = interfaces_1.Status.Overdue;
+    return initStatus;
+};
 const Task = (0, mongoose_1.model)("Task", taskSchema);
 exports.default = Task;
