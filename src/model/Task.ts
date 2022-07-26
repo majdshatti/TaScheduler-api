@@ -41,18 +41,23 @@ const taskSchema = new Schema<ITask>(
 taskSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   this.slug = slugify(this.name, { lower: true });
-
-  let status = Status.Hold;
-
-  const startDate = new Date(this.startDate).getTime();
-  const currentDate = new Date().getTime();
-
-  if (startDate <= currentDate) status = Status.Active;
-
-  this.status = Status.Active;
+  this.status = setInitStatus(this.startDate, this.dueDate);
 
   next();
 });
+
+//* @desc Set an initial value for the status of a task
+const setInitStatus = function (sDate: Date, eDate: Date) {
+  let initStatus = Status.Active;
+  const startDate = new Date(sDate).getTime();
+  const dueDate = new Date(eDate).getTime();
+  const currentDate = new Date().getTime();
+
+  if (currentDate < startDate) initStatus = Status.Hold;
+  if (currentDate > dueDate) initStatus = Status.Overdue;
+
+  return initStatus;
+};
 
 const Task = model<ITask>("Task", taskSchema);
 export default Task;
