@@ -4,6 +4,7 @@ import asyncHandler from "./async";
 import taskValidate from "./validators/task.validate";
 import authValidate from "./validators/auth.validate";
 import projectValidate from "./validators/project.validate";
+import todoValidate from "./validators/todo.validate";
 
 export {
   errorHandler,
@@ -12,4 +13,5 @@ export {
   taskValidate,
   authValidate,
   projectValidate,
+  todoValidate,
 };
