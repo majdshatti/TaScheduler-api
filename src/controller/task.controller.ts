@@ -8,9 +8,10 @@ import {
   addTask,
   updateTask,
   deleteTaskBySlug,
+  changeStatus,
 } from "../services/task.service";
 // Interfaces
-import { IResponse, ITask } from "../interfaces";
+import { IResponse, ITask, Status } from "../interfaces";
 // Utils
 import { ErrorResponse, getErrorMessage, getSuccessMessage } from "../utils";
 
@@ -102,6 +103,23 @@ export const deleteTask = asyncHandler(
     return res.status(201).json({
       success: true,
       message: getSuccessMessage("delete", "task"),
+    } as IResponse);
+  }
+);
+
+//* @desc Change a task status
+//* @route PUT /api/task/:slug/stauts
+//* @access private
+export const completeTask = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    let task = req.body.validationResults.Task;
+
+    task = await changeStatus(task, Status.Completed);
+
+    return res.status(201).json({
+      success: true,
+      data: task,
+      message: getSuccessMessage("edit", "task"),
     } as IResponse);
   }
 );
