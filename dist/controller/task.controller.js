@@ -22,11 +22,7 @@ const utils_1 = require("../utils");
 //* @route GET /api/task
 //* @access private
 exports.getTasks = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const tasks = yield (0, task_service_1.getAllTasks)();
-    res.status(200).json({
-        success: true,
-        data: tasks,
-    });
+    res.status(200).send(res.filter);
 }));
 //* @desc Get a single task by slug
 //* @route GET /api/task/:slug

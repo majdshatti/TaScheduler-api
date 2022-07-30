@@ -6,6 +6,7 @@ import isObjKey from "./object/isObjectKey";
 import { socketConnection, sendMessage } from "./socket-io/socketConnection";
 import verifyToken from "./auth/verifyToken";
 import getPopulatedObject from "./object/populatedObject";
+import getTodoIndexById from "./array/getIndex";
 
 export {
   ErrorResponse,
@@ -17,4 +18,5 @@ export {
   verifyToken,
   sendMessage,
   getPopulatedObject,
+  getTodoIndexById,
 };

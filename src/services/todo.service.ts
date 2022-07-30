@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { Task } from "../model";
 // Interfaces
 import { ITask, ITodo } from "../interfaces";
+import { getErrorMessage } from "../utils";
 
 //* @desc: Add todo to task
 export const pushTodo = async (taskSlug: string, paragraph: string) => {
@@ -44,7 +45,7 @@ export const pullTodo = async (taskSlug: string, todoId: string) => {
   }
 };
 
-//* @desc: Edit todo
+//* @desc: Edit todo isChecked
 export const toggleTodo = async (task: ITask, todoIndex: number) => {
   try {
     task.todos[todoIndex].isChecked = !task.todos[todoIndex].isChecked;
@@ -53,5 +54,16 @@ export const toggleTodo = async (task: ITask, todoIndex: number) => {
     return await task.save();
   } catch (err) {
     return Promise.reject("");
+  }
+};
+
+//* @desc: Edit todo
+export const editTodo = async (task: ITask, todoIndex: number, data: ITodo) => {
+  try {
+    task.todos[todoIndex].paragraph = data.paragraph;
+
+    return await Task.findOneAndUpdate(task._id, task, { new: true });
+  } catch (err) {
+    return Promise.reject(getErrorMessage("serverError", "todo"));
   }
 };

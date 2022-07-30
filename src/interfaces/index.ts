@@ -1,5 +1,5 @@
 import IResponse from "./response.interface";
-import IUser from "./user.interface";
+import { IUser, IUserDocument } from "./user.interface";
 import { ITask, Status } from "./task.interface";
 import ITodo from "./todo.interface";
 import IProject from "./project.interface";
@@ -9,6 +9,7 @@ import {
   ClientToServerEvents,
   SocketData,
 } from "./socket.interface";
+import { IFilterResponse, IAuthRequest } from "./response.interface";
 
 export {
   IResponse,
@@ -21,4 +22,7 @@ export {
   InterServerEvents,
   ClientToServerEvents,
   SocketData,
+  IFilterResponse,
+  IAuthRequest,
+  IUserDocument,
 };

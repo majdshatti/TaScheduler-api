@@ -1,6 +1,6 @@
 import { Document } from "mongoose";
 
-interface IUser extends Document {
+interface IUser {
   username: string;
   slug?: string;
   password: string;
@@ -15,4 +15,6 @@ interface IUser extends Document {
   getResetPasswordToken(): string;
 }
 
-export default IUser;
+interface IUserDocument extends Document, IUser {}
+
+export { IUser, IUserDocument };

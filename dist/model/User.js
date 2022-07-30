@@ -33,7 +33,11 @@ const userSchema = new mongoose_1.Schema({
         default: () => new Date(),
     },
     updatedAt: Date,
-}, { versionKey: false });
+}, {
+    versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+});
 /*** Pre proccessing data ***/
 userSchema.pre("save", function () {
     return __awaiter(this, void 0, void 0, function* () {
@@ -69,5 +73,11 @@ userSchema.methods.getResetPasswordToken = function () {
     this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
     return resetToken;
 };
+userSchema.virtual("project", {
+    ref: "Project",
+    localField: "_id",
+    foreignField: "user",
+    justOne: false,
+});
 const User = (0, mongoose_1.model)("User", userSchema);
 exports.default = User;

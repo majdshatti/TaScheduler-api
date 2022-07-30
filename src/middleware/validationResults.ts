@@ -1,21 +1,56 @@
 import { Request, Response, NextFunction } from "express";
-import { validationResult } from "express-validator";
+import { validationResult, matchedData } from "express-validator";
+import { getErrorMessage } from "../utils";
 
 const results = () => (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req).formatWith(({ msg, param, value }) => ({
-        message: msg,
-        path: param,
-        value
-    }));
+  // Stores error occured while validating
+  const errors = validationResult(req).formatWith(({ msg, param, value }) => ({
+    message: msg,
+    path: param,
+    value,
+  }));
 
-    if(!errors.isEmpty()){
-      return res.status(400).json({
-        success: false,
-        errors: errors.array()
-      })
+  // Return error response with validation results
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
+
+  // An array of unmatched body attributes
+  let unMatchedFields = [];
+
+  // An array for storing validated attributes
+  let fields = [];
+
+  // Get the key attributes from validated data
+  const validatedData = matchedData(req, { includeOptionals: true });
+
+  // Store keys
+  for (const key in validatedData) {
+    fields.push(key);
+  }
+
+  // Extra attributes errors
+  for (const bodyFields in req.body) {
+    if (!fields.includes(bodyFields)) {
+      unMatchedFields.push({
+        path: bodyFields,
+        message: getErrorMessage("extraFields", bodyFields),
+      });
     }
+  }
 
-    next()
-}
+  // Return error response with validation results
+  if (unMatchedFields.length > 0) {
+    return res.status(400).json({
+      success: false,
+      errors: unMatchedFields,
+    });
+  }
 
-export default results
+  next();
+};
+
+export default results;

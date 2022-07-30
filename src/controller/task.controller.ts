@@ -11,7 +11,7 @@ import {
   changeStatus,
 } from "../services/task.service";
 // Interfaces
-import { IResponse, ITask, Status } from "../interfaces";
+import { IResponse, ITask, Status, IFilterResponse } from "../interfaces";
 // Utils
 import { ErrorResponse, getErrorMessage, getSuccessMessage } from "../utils";
 
@@ -19,13 +19,8 @@ import { ErrorResponse, getErrorMessage, getSuccessMessage } from "../utils";
 //* @route GET /api/task
 //* @access private
 export const getTasks = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const tasks = await getAllTasks();
-
-    res.status(200).json({
-      success: true,
-      data: tasks,
-    } as IResponse);
+  async (req: Request, res: IFilterResponse, next: NextFunction) => {
+    res.status(200).send(res.filter);
   }
 );
 

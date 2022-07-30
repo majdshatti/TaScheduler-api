@@ -5,9 +5,12 @@ const todoValidate = (
 ) => {
   switch (validationCase) {
     case "check" || "delete":
-      validate("todoId").isRequired().isObjectId().exec();
+      return [validate("todoId").isRequired().isObjectId().exec()];
     case "edit" || "create":
-      validate("paragraph").isRequired().isString().exec();
+      return [
+        validate("todoId").isRequired().isObjectId().exec(),
+        validate("paragraph").isRequired().isString().exec(),
+      ];
     default:
       return [];
   }

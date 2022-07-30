@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toggleTodo = exports.pullTodo = exports.pushTodo = void 0;
+exports.editTodo = exports.toggleTodo = exports.pullTodo = exports.pushTodo = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 // Models
 const model_1 = require("../model");
+const utils_1 = require("../utils");
 //* @desc: Add todo to task
 const pushTodo = (taskSlug, paragraph) => __awaiter(void 0, void 0, void 0, function* () {
     const todo = {
@@ -47,7 +48,7 @@ const pullTodo = (taskSlug, todoId) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.pullTodo = pullTodo;
-//* @desc: Edit todo
+//* @desc: Edit todo isChecked
 const toggleTodo = (task, todoIndex) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         task.todos[todoIndex].isChecked = !task.todos[todoIndex].isChecked;
@@ -59,3 +60,14 @@ const toggleTodo = (task, todoIndex) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.toggleTodo = toggleTodo;
+//* @desc: Edit todo
+const editTodo = (task, todoIndex, data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        task.todos[todoIndex].paragraph = data.paragraph;
+        return yield model_1.Task.findOneAndUpdate(task._id, task, { new: true });
+    }
+    catch (err) {
+        return Promise.reject((0, utils_1.getErrorMessage)("serverError", "todo"));
+    }
+});
+exports.editTodo = editTodo;

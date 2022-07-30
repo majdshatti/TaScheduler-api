@@ -2,12 +2,22 @@ import { Request, Response, NextFunction } from "express";
 // Middlewares
 import { asyncHandler } from "../middleware";
 // Services
-import { pushTodo, pullTodo, toggleTodo } from "../services/todo.service";
+import {
+  pushTodo,
+  pullTodo,
+  toggleTodo,
+  editTodo,
+} from "../services/todo.service";
 import { getTaskBySlug } from "../services/task.service";
 // Interfaces
-import { IResponse, ITask } from "../interfaces";
+import { IResponse, ITask, ITodo } from "../interfaces";
 // Utils
-import { ErrorResponse, getErrorMessage, getSuccessMessage } from "../utils";
+import {
+  ErrorResponse,
+  getErrorMessage,
+  getSuccessMessage,
+  getTodoIndexById,
+} from "../utils";
 
 //* @desc Create a task
 //* @route PUT /api/project/:slug/todo
@@ -54,8 +64,30 @@ export const removeTodo = asyncHandler(
 //* @desc Edit a todo
 //* @route PUT /api/project/:slug/todo/:id
 //* @access private
-export const editTodo = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {}
+export const editTodoData = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const taskSlug = req.params.slug;
+    const paragraph = req.body.paragraph as string;
+    const todoId = req.params.todoId;
+
+    let task = await getTaskBySlug(taskSlug);
+
+    if (!task)
+      return next(new ErrorResponse(getErrorMessage("exist", "task"), 404));
+
+    const todoIndex = getTodoIndexById(task.todos, todoId).index;
+
+    if (todoIndex < 0)
+      return next(new ErrorResponse(getErrorMessage("exist", "todo"), 404));
+
+    task = await editTodo(task, todoIndex, { paragraph } as ITodo);
+
+    res.status(200).json({
+      success: true,
+      data: task,
+      message: getSuccessMessage("edit", "task"),
+    } as IResponse);
+  }
 );
 
 //* @desc Check a todo

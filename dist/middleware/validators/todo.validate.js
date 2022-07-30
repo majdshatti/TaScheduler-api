@@ -4,9 +4,12 @@ const utils_1 = require("../../utils");
 const todoValidate = (validationCase) => {
     switch (validationCase) {
         case "check" || "delete":
-            (0, utils_1.validate)("todoId").isRequired().isObjectId().exec();
+            return [(0, utils_1.validate)("todoId").isRequired().isObjectId().exec()];
         case "edit" || "create":
-            (0, utils_1.validate)("paragraph").isRequired().isString().exec();
+            return [
+                (0, utils_1.validate)("todoId").isRequired().isObjectId().exec(),
+                (0, utils_1.validate)("paragraph").isRequired().isString().exec(),
+            ];
         default:
             return [];
     }

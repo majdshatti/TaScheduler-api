@@ -13,11 +13,16 @@ import {
 import {
   removeTodo,
   addTodo,
-  editTodo,
+  editTodoData,
   editTodoCheck,
 } from "../controller/todo.controller";
 // Middlewares
-import { taskValidate, validationResults, todoValidate } from "../middleware/";
+import {
+  taskValidate,
+  validationResults,
+  todoValidate,
+  filter,
+} from "../middleware/";
 
 const router = Router();
 
@@ -31,6 +36,7 @@ router
 
 router
   .route("/:slug/todo/:todoId")
+  .put(todoValidate("edit"), validationResults(), editTodoData)
   .delete(todoValidate("delete"), validationResults(), removeTodo);
 
 router
@@ -53,7 +59,7 @@ router
 
 router
   .route("/")
-  .get(getTasks)
+  .get(filter("Task", "user project"), getTasks)
   .post(taskValidate("create"), validationResults(), createTask);
 
 export default router;

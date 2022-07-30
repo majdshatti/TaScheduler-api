@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editTodoCheck = exports.editTodo = exports.removeTodo = exports.addTodo = void 0;
+exports.editTodoCheck = exports.editTodoData = exports.removeTodo = exports.addTodo = void 0;
 // Middlewares
 const middleware_1 = require("../middleware");
 // Services
@@ -50,7 +50,23 @@ exports.removeTodo = (0, middleware_1.asyncHandler)((req, res, next) => __awaite
 //* @desc Edit a todo
 //* @route PUT /api/project/:slug/todo/:id
 //* @access private
-exports.editTodo = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () { }));
+exports.editTodoData = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const taskSlug = req.params.slug;
+    const paragraph = req.body.paragraph;
+    const todoId = req.params.todoId;
+    let task = yield (0, task_service_1.getTaskBySlug)(taskSlug);
+    if (!task)
+        return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "task"), 404));
+    const todoIndex = (0, utils_1.getTodoIndexById)(task.todos, todoId).index;
+    if (todoIndex < 0)
+        return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "todo"), 404));
+    task = yield (0, todo_service_1.editTodo)(task, todoIndex, { paragraph });
+    res.status(200).json({
+        success: true,
+        data: task,
+        message: (0, utils_1.getSuccessMessage)("edit", "task"),
+    });
+}));
 //* @desc Check a todo
 //* @route PUT /api/project/:slug/todo/:id/check
 //* @access private

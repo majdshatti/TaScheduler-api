@@ -1,4 +1,4 @@
-import { IUser } from "./";
+import { IUserDocument } from "./";
 
 interface ServerToClientEvents {
   notifyTask: (key: string, body: Object) => void;
@@ -13,7 +13,7 @@ interface InterServerEvents {
 }
 
 interface SocketData {
-  user: IUser;
+  user: IUserDocument;
 }
 
 export {

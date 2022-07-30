@@ -10,6 +10,7 @@ import {
   ClientToServerEvents,
   SocketData,
   IUser,
+  IUserDocument,
 } from "./../../interfaces";
 import { ClientSession } from "mongoose";
 
@@ -47,7 +48,7 @@ export const socketConnection = (httpServer: any) => {
 
   // Socket Connection
   io.on("connection", function (socket) {
-    const userId = socket.data?.user?._id.toString();
+    const userId = socket.data.user?._id.toString();
     console.log(`A client has connect on socket id ${socket.id}`);
 
     if (userId) assignUser(userId, socket.id);

@@ -9,6 +9,10 @@ const projectSchema = new Schema<IProject>(
     slug: String,
     description: String,
     status: String,
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     createdAt: {
       type: Date,
       default: () => new Date(),

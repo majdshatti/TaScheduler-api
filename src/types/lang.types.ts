@@ -21,6 +21,8 @@ export type errorSentances = {
   operation: string;
   statusSame: string;
   serverError: string;
+  auth: string;
+  extraFields: string;
 };
 
 export type successSentances = {

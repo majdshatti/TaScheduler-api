@@ -12,7 +12,7 @@ export const getAllTasks = () => {
 
 //* @desc: Get single task service
 export const getTaskBySlug = (slug: string) => {
-  return Task.findOne({ slug });
+  return Task.findOne({ slug }).populate("user project");
 };
 
 //* @desc: Create a task service

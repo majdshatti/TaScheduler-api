@@ -10,6 +10,10 @@ const projectSchema = new mongoose_1.Schema({
     slug: String,
     description: String,
     status: String,
+    user: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
+    },
     createdAt: {
         type: Date,
         default: () => new Date(),

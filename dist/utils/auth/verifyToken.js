@@ -19,7 +19,7 @@ const verifyToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         let user;
         if (typeof decoded !== "string") {
-            user = yield (0, user_service_1.getUserByCondition)({ _id: decoded.id });
+            user = yield (0, user_service_1.getUserById)(decoded.id);
         }
         return user;
     }

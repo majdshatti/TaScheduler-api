@@ -24,7 +24,7 @@ const getAllTasks = () => {
 exports.getAllTasks = getAllTasks;
 //* @desc: Get single task service
 const getTaskBySlug = (slug) => {
-    return model_1.Task.findOne({ slug });
+    return model_1.Task.findOne({ slug }).populate("user project");
 };
 exports.getTaskBySlug = getTaskBySlug;
 //* @desc: Create a task service

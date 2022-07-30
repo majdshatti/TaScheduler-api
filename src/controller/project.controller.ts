@@ -5,34 +5,33 @@ import { asyncHandler } from "../middleware";
 // Services
 import {
   getAllProjects,
-  getSingleProject,
+  getProjectBySlug,
   createProject,
   updateProject,
   deleteProjectBySlug,
 } from "../services/project.service";
 // Utils
 import { ErrorResponse, getErrorMessage, getSuccessMessage } from "../utils";
+// Interfaces
+import { IFilterResponse } from "../interfaces";
 
 //* @desc Get all projects
 //* @route GET /api/project
 //* @access private
 export const getProjects = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).json({
-      success: true,
-      data: await getAllProjects(),
-    });
+  async (req: Request, res: IFilterResponse, next: NextFunction) => {
+    res.status(200).send(res.filter);
   }
 );
 
 //* @desc Get a single project by slug
 //* @route GET /api/project/:slug
 //* @access private
-export const getProjectBySlug = asyncHandler(
+export const getSingleProject = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const slug = req.params.slug;
 
-    const project = await getSingleProject({ slug });
+    const project = await getProjectBySlug({ slug });
 
     if (!project)
       return next(new ErrorResponse(getErrorMessage("exist", slug), 404));

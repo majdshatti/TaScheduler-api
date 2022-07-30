@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPopulatedObject = exports.sendMessage = exports.verifyToken = exports.socketConnection = exports.isObjKey = exports.validate = exports.getSuccessMessage = exports.getErrorMessage = exports.ErrorResponse = void 0;
+exports.getTodoIndexById = exports.getPopulatedObject = exports.sendMessage = exports.verifyToken = exports.socketConnection = exports.isObjKey = exports.validate = exports.getSuccessMessage = exports.getErrorMessage = exports.ErrorResponse = void 0;
 const errorResponse_1 = __importDefault(require("./error/errorResponse"));
 exports.ErrorResponse = errorResponse_1.default;
 const validate_1 = __importDefault(require("./validation/validate"));
@@ -21,3 +21,5 @@ const verifyToken_1 = __importDefault(require("./auth/verifyToken"));
 exports.verifyToken = verifyToken_1.default;
 const populatedObject_1 = __importDefault(require("./object/populatedObject"));
 exports.getPopulatedObject = populatedObject_1.default;
+const getIndex_1 = __importDefault(require("./array/getIndex"));
+exports.getTodoIndexById = getIndex_1.default;

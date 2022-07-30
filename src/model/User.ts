@@ -4,9 +4,9 @@ import slugify from "slugify";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import IUser from "../interfaces/user.interface";
+import { IUser, IUserDocument } from "../interfaces/user.interface";
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUserDocument>(
   {
     username: String,
     slug: String,
@@ -24,7 +24,11 @@ const userSchema = new Schema<IUser>(
     },
     updatedAt: Date,
   },
-  { versionKey: false }
+  {
+    versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
 /*** Pre proccessing data ***/
@@ -65,5 +69,12 @@ userSchema.methods.getResetPasswordToken = function () {
   return resetToken;
 };
 
-const User = model<IUser>("User", userSchema);
+userSchema.virtual("project", {
+  ref: "Project",
+  localField: "_id",
+  foreignField: "user",
+  justOne: false,
+});
+
+const User = model<IUserDocument>("User", userSchema);
 export default User;

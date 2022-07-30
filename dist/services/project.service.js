@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProjectBySlug = exports.updateProject = exports.createProject = exports.getSingleProject = exports.getAllProjects = void 0;
+exports.deleteProjectBySlug = exports.updateProject = exports.createProject = exports.getProjectBySlug = exports.getAllProjects = void 0;
 const slugify_1 = __importDefault(require("slugify"));
 // Models
 const model_1 = require("./../model");
@@ -22,9 +22,9 @@ const getAllProjects = () => {
 };
 exports.getAllProjects = getAllProjects;
 //* @desc: Get a single project by condition
-const getSingleProject = (condition) => __awaiter(void 0, void 0, void 0, function* () {
+const getProjectBySlug = (condition) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const project = yield model_1.Project.findOne(condition);
+        const project = yield model_1.Project.findOne(condition).populate("user");
         if (!project)
             return false;
         return project;
@@ -33,7 +33,7 @@ const getSingleProject = (condition) => __awaiter(void 0, void 0, void 0, functi
         return false;
     }
 });
-exports.getSingleProject = getSingleProject;
+exports.getProjectBySlug = getProjectBySlug;
 //* @desc: Create a project service
 const createProject = (body) => {
     return model_1.Project.create(body);

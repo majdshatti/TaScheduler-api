@@ -12,7 +12,7 @@ router
     .post((0, middleware_1.projectValidate)("edit"), (0, middleware_1.validationResults)(), project_controller_1.saveProject);
 router
     .route("/:slug")
-    .get(project_controller_1.getProjectBySlug)
+    .get(project_controller_1.getSingleProject)
     .put(project_controller_1.editProject)
     .delete(project_controller_1.deleteProject);
 exports.default = router;

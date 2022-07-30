@@ -1,15 +1,24 @@
 // Models
 import { User } from "../model/";
+// Interfaces
+import { IUser, IUserDocument } from "../interfaces";
 
-// Interface
-import IUser from "../interfaces/user.interface";
+export const getUserById = async (_id: string, populate?: string) => {
+  populate = populate ?? "";
+  return User.findOne({ _id }).populate(populate);
+};
 
-export const getUserByCondition = (condition: object) => {
-  try {
-    const user = User.findOne(condition);
+export const getUserBySlug = async (slug: string, populate?: string) => {
+  populate = populate ?? "";
+  return User.findOne({ slug }).populate(populate);
+};
 
-    return user;
-  } catch (error) {
-    console.log(error);
-  }
+export const updateUser = async (slug: string, data: IUser) => {
+  return User.findOneAndUpdate({ slug }, data, {
+    new: true,
+  });
+};
+
+export const destroyUser = async (user: IUserDocument) => {
+  return user.deleteOne();
 };

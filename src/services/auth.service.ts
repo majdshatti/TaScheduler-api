@@ -2,7 +2,7 @@
 import { User } from "../model/";
 
 // Interface
-import IUser from "../interfaces/user.interface";
+import { IUser } from "../interfaces/user.interface";
 
 export const findUserByCreds = async (username: string, password: string) => {
   try {

@@ -2,7 +2,7 @@ import { Router } from "express";
 // Controller
 import {
   getProjects,
-  getProjectBySlug,
+  getSingleProject,
   saveProject,
   editProject,
   deleteProject,
@@ -18,7 +18,7 @@ router
 
 router
   .route("/:slug")
-  .get(getProjectBySlug)
+  .get(getSingleProject)
   .put(editProject)
   .delete(deleteProject);
 

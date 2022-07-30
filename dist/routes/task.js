@@ -16,6 +16,7 @@ router
     .put((0, middleware_1.todoValidate)("check"), (0, middleware_1.validationResults)(), todo_controller_1.editTodoCheck);
 router
     .route("/:slug/todo/:todoId")
+    .put((0, middleware_1.todoValidate)("edit"), (0, middleware_1.validationResults)(), todo_controller_1.editTodoData)
     .delete((0, middleware_1.todoValidate)("delete"), (0, middleware_1.validationResults)(), todo_controller_1.removeTodo);
 router
     .route("/:slug/todo")
@@ -33,6 +34,6 @@ router
     .delete(task_controller_1.deleteTask);
 router
     .route("/")
-    .get(task_controller_1.getTasks)
+    .get((0, middleware_1.filter)("Task", "user project"), task_controller_1.getTasks)
     .post((0, middleware_1.taskValidate)("create"), (0, middleware_1.validationResults)(), task_controller_1.createTask);
 exports.default = router;

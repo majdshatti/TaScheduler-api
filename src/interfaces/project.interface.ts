@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 
 enum Status {
   Completed = "Completed",
@@ -11,6 +11,7 @@ interface IProject extends Document {
   slug?: string;
   description?: string;
   status: Status;
+  user: ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
 }

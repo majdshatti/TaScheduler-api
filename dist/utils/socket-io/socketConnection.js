@@ -34,8 +34,8 @@ const socketConnection = (httpServer) => {
     }));
     // Socket Connection
     io.on("connection", function (socket) {
-        var _a, _b;
-        const userId = (_b = (_a = socket.data) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b._id.toString();
+        var _a;
+        const userId = (_a = socket.data.user) === null || _a === void 0 ? void 0 : _a._id.toString();
         console.log(`A client has connect on socket id ${socket.id}`);
         if (userId)
             assignUser(userId, socket.id);

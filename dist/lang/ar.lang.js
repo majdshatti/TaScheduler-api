@@ -44,6 +44,8 @@ const arErrorData = (path, value) => {
         operation: `لا يمكن إجراء العملية`,
         statusSame: `${value} ${path} له بالفعل نفس الوضع`,
         serverError: `حدث خطأ أثناء محاولة إجراء هذه العملية`,
+        auth: `لم يتم مصادقة المستخدم للوصول إلى هذا المسار`,
+        extraFields: `لم يتم التعرف على '${path}' كمعامل طلب.`,
     };
     return sentances;
 };

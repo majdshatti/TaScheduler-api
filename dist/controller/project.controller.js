@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProject = exports.editProject = exports.saveProject = exports.getProjectBySlug = exports.getProjects = void 0;
+exports.deleteProject = exports.editProject = exports.saveProject = exports.getSingleProject = exports.getProjects = void 0;
 // Middleware
 const middleware_1 = require("../middleware");
 // Services
@@ -20,17 +20,14 @@ const utils_1 = require("../utils");
 //* @route GET /api/project
 //* @access private
 exports.getProjects = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(200).json({
-        success: true,
-        data: yield (0, project_service_1.getAllProjects)(),
-    });
+    res.status(200).send(res.filter);
 }));
 //* @desc Get a single project by slug
 //* @route GET /api/project/:slug
 //* @access private
-exports.getProjectBySlug = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getSingleProject = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const slug = req.params.slug;
-    const project = yield (0, project_service_1.getSingleProject)({ slug });
+    const project = yield (0, project_service_1.getProjectBySlug)({ slug });
     if (!project)
         return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", slug), 404));
     return res.status(200).json({

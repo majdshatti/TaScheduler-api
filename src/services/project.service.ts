@@ -9,9 +9,9 @@ export const getAllProjects = () => {
 };
 
 //* @desc: Get a single project by condition
-export const getSingleProject = async (condition: Object) => {
+export const getProjectBySlug = async (condition: Object) => {
   try {
-    const project = await Project.findOne(condition);
+    const project = await Project.findOne(condition).populate("user");
 
     if (!project) return false;
 
