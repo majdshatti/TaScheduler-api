@@ -43,6 +43,8 @@ const enErrorData = (path: string, value?: string): errorSentances => {
     operation: `Operation ${path} could not be performed, try again later.`,
     statusSame: `${path} is already has the same status: ${value}`,
     serverError: `An error occured while trying to perform this operation.`,
+    auth: `Not authenticated to access this route`,
+    extraFields: `'${path}' is not recognized as a request parameter.`,
   };
 
   return sentances;
