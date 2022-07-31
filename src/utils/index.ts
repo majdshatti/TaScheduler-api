@@ -7,6 +7,9 @@ import { socketConnection, sendMessage } from "./socket-io/socketConnection";
 import verifyToken from "./auth/verifyToken";
 import getPopulatedObject from "./object/populatedObject";
 import getTodoIndexById from "./array/getIndex";
+import mailTemplate from "./mail/mailTemplate";
+import sendEmail from "./mail/sendEmail";
+import resetTemplate from "./mail/templates/resetPassword";
 
 export {
   ErrorResponse,
@@ -19,4 +22,7 @@ export {
   sendMessage,
   getPopulatedObject,
   getTodoIndexById,
+  mailTemplate,
+  sendEmail,
+  resetTemplate,
 };

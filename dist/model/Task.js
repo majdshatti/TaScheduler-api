@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,6 +18,8 @@ const slugify_1 = __importDefault(require("slugify"));
 const _1 = require("./");
 // Interfaces
 const interfaces_1 = require("./../interfaces");
+// Services
+const project_service_1 = require("../services/project.service");
 const taskSchema = new mongoose_1.Schema({
     name: String,
     slug: String,
@@ -41,6 +52,11 @@ taskSchema.pre("save", function (next) {
     this.slug = (0, slugify_1.default)(this.name, { lower: true });
     this.status = setInitStatus(this.startDate, this.dueDate);
     next();
+});
+taskSchema.post("save", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield (0, project_service_1.countProjectTasks)(this.project);
+    });
 });
 //* @desc Set an initial value for the status of a task
 const setInitStatus = function (sDate, eDate) {

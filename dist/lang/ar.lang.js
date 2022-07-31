@@ -19,6 +19,8 @@ const arSuccessData = (path) => {
         create: `تم إنشاء ${translate(path)} بنجاح`,
         edit: `تم تحديث ${translate(path)} بنجاح`,
         delete: `تم حذف ${translate(path)} بنجاح`,
+        emailSent: `تم إرسال البريد الإلكتروني بنجاح`,
+        resetPass: `إعادة تعيين كلمة المرور بنجاح`,
     };
     return sentances;
 };
@@ -46,6 +48,7 @@ const arErrorData = (path, value) => {
         serverError: `حدث خطأ أثناء محاولة إجراء هذه العملية`,
         auth: `لم يتم مصادقة المستخدم للوصول إلى هذا المسار`,
         extraFields: `لم يتم التعرف على '${path}' كمعامل طلب.`,
+        invalidToken: `رمز غير صالح`,
     };
     return sentances;
 };

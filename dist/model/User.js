@@ -26,7 +26,7 @@ const userSchema = new mongoose_1.Schema({
     },
     email: String,
     resetPasswordToken: String,
-    resetPasswordExprie: Date,
+    resetPasswordExpire: String,
     createdAt: {
         type: Date,
         immutable: true,
@@ -42,8 +42,10 @@ const userSchema = new mongoose_1.Schema({
 userSchema.pre("save", function () {
     return __awaiter(this, void 0, void 0, function* () {
         // Hashing password
-        const salt = yield bcrypt_1.default.genSalt(10);
-        this.password = yield bcrypt_1.default.hash(this.password, salt);
+        if (this.isModified("password")) {
+            const salt = yield bcrypt_1.default.genSalt(10);
+            this.password = yield bcrypt_1.default.hash(this.password, salt);
+        }
         // Setting up date and slug
         this.updatedAt = new Date();
         this.slug = (0, slugify_1.default)(this.username, { lower: true });

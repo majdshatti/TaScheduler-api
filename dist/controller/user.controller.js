@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.resetPassword = exports.forgotPassword = exports.editUser = exports.getUserProfile = exports.getSingleUser = exports.getUsers = void 0;
+exports.deleteUser = exports.editUser = exports.getUserProfile = exports.getSingleUser = exports.getUsers = void 0;
 // Middleware
 const middleware_1 = require("../middleware");
 // Services
@@ -65,8 +65,6 @@ exports.editUser = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(
         message: (0, utils_1.getSuccessMessage)("edit", "user"),
     });
 }));
-exports.forgotPassword = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () { }));
-exports.resetPassword = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () { }));
 //* @desc Delete a user
 //* @route DELETE /api/user/:slug
 //* @access private

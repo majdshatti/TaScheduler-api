@@ -24,6 +24,8 @@ const node_cron_1 = __importDefault(require("node-cron"));
 // Services
 const schedulers_1 = require("./schedulers");
 const utils_1 = require("./utils");
+// Path
+const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 // Server
 const httpServer = require("http").Server(app);
@@ -38,6 +40,8 @@ app.use((0, cookie_parser_1.default)());
 // Body parser
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+// Public folder
+app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 // Socketing
 (0, utils_1.socketConnection)(httpServer);
 // Schedule Task Checking

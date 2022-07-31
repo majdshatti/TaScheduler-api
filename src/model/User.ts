@@ -4,7 +4,7 @@ import slugify from "slugify";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import { IUser, IUserDocument } from "../interfaces/user.interface";
+import { IUserDocument } from "../interfaces/user.interface";
 
 const userSchema = new Schema<IUserDocument>(
   {
@@ -16,7 +16,7 @@ const userSchema = new Schema<IUserDocument>(
     },
     email: String,
     resetPasswordToken: String,
-    resetPasswordExprie: Date,
+    resetPasswordExpire: String,
     createdAt: {
       type: Date,
       immutable: true,
@@ -34,8 +34,10 @@ const userSchema = new Schema<IUserDocument>(
 /*** Pre proccessing data ***/
 userSchema.pre("save", async function () {
   // Hashing password
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  if (this.isModified("password")) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
   // Setting up date and slug
   this.updatedAt = new Date();
   this.slug = slugify(this.username, { lower: true });

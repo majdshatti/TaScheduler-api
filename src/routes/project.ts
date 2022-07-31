@@ -8,12 +8,12 @@ import {
   deleteProject,
 } from "../controller/project.controller";
 // Middlewares
-import { projectValidate, validationResults } from "../middleware";
+import { projectValidate, validationResults, filter } from "../middleware";
 const router = Router();
 
 router
   .route("/")
-  .get(getProjects)
+  .get(filter("Project"), getProjects)
   .post(projectValidate("edit"), validationResults(), saveProject);
 
 router

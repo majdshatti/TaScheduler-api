@@ -19,6 +19,8 @@ import cron from "node-cron";
 // Services
 import { checkTaskStatus } from "./schedulers";
 import { socketConnection } from "./utils";
+// Path
+import path from "path";
 
 const app = express();
 // Server
@@ -39,6 +41,9 @@ app.use(cookies());
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Public folder
+app.use(express.static(path.join(__dirname, "public")));
 
 // Socketing
 socketConnection(httpServer);

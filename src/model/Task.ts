@@ -3,9 +3,10 @@ import slugify from "slugify";
 
 // Schemas
 import { todoSchema } from "./";
-
 // Interfaces
 import { ITask, Status } from "./../interfaces";
+// Services
+import { countProjectTasks } from "../services/project.service";
 
 const taskSchema = new Schema<ITask>(
   {
@@ -44,6 +45,10 @@ taskSchema.pre("save", function (next) {
   this.status = setInitStatus(this.startDate, this.dueDate);
 
   next();
+});
+
+taskSchema.post("save", async function () {
+  await countProjectTasks(this.project);
 });
 
 //* @desc Set an initial value for the status of a task

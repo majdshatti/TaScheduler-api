@@ -8,7 +8,7 @@ const middleware_1 = require("../middleware");
 const router = (0, express_1.Router)();
 router
     .route("/")
-    .get(project_controller_1.getProjects)
+    .get((0, middleware_1.filter)("Project"), project_controller_1.getProjects)
     .post((0, middleware_1.projectValidate)("edit"), (0, middleware_1.validationResults)(), project_controller_1.saveProject);
 router
     .route("/:slug")

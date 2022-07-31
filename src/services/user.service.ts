@@ -13,6 +13,14 @@ export const getUserBySlug = async (slug: string, populate?: string) => {
   return User.findOne({ slug }).populate(populate);
 };
 
+export const getUserByCondition = async (
+  condition: Object,
+  populate?: string
+) => {
+  populate = populate ?? "";
+  return User.findOne(condition).populate("");
+};
+
 export const updateUser = async (slug: string, data: IUser) => {
   return User.findOneAndUpdate({ slug }, data, {
     new: true,

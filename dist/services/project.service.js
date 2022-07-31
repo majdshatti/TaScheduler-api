@@ -12,10 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProjectBySlug = exports.updateProject = exports.createProject = exports.getProjectBySlug = exports.getAllProjects = void 0;
+exports.countProjectTasks = exports.deleteProjectBySlug = exports.updateProject = exports.createProject = exports.getProjectBySlug = exports.getAllProjects = void 0;
 const slugify_1 = __importDefault(require("slugify"));
 // Models
 const model_1 = require("./../model");
+// Interfaces
+const interfaces_1 = require("../interfaces");
 //* @desc: Get all projects service
 const getAllProjects = () => {
     return model_1.Project.find();
@@ -71,3 +73,25 @@ const deleteProjectBySlug = (slug) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.deleteProjectBySlug = deleteProjectBySlug;
+//* @desc: Count Project Tasks
+const countProjectTasks = (projectId) => __awaiter(void 0, void 0, void 0, function* () {
+    let completedTasks = 0;
+    let unCompletedTasks = 0;
+    const project = yield model_1.Project.findOne({ _id: projectId }).populate("tasks");
+    if (!project)
+        return false;
+    if (project.tasks.length > 0) {
+        for (const task of project.tasks) {
+            if (task.status === interfaces_1.Status.Completed)
+                completedTasks += 1;
+            if (task.status !== interfaces_1.Status.Completed)
+                unCompletedTasks += 1;
+        }
+    }
+    yield project.updateOne({
+        completedTasksCount: completedTasks,
+        unCompletedTasksCount: unCompletedTasks,
+    });
+    return;
+});
+exports.countProjectTasks = countProjectTasks;

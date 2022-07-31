@@ -7,8 +7,6 @@ import {
   getUserProfile,
   editUser,
   deleteUser,
-  forgotPassword,
-  resetPassword,
 } from "../controller/user.controller";
 
 // Middlewares
@@ -17,13 +15,6 @@ import { validationResults, userValidate, filter } from "../middleware/";
 const router = Router();
 
 router.route("/profile").get(getUserProfile);
-
-router
-  .route("/:slug/forgotpassword")
-  .post(userValidate("forgot"), validationResults(), forgotPassword);
-router
-  .route("/:slug/resetpassword")
-  .post(userValidate("reset"), validationResults(), resetPassword);
 
 router
   .route("/:slug")

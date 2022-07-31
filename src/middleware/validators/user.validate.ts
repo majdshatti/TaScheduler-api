@@ -1,8 +1,6 @@
 import { validate } from "../../utils";
 
-const userValidate = (
-  validationCase: "edit" | "delete" | "forgot" | "reset"
-) => {
+const userValidate = (validationCase: "edit" | "delete") => {
   switch (validationCase) {
     case "delete":
       return [];
@@ -11,10 +9,7 @@ const userValidate = (
         validate("username").optional().isString().isUnique("User").exec(),
         validate("email").optional().isEmail().isUnique("User").exec(),
       ];
-    case "forgot":
-      return [];
-    case "reset":
-      return [];
+
     default:
       return [];
   }

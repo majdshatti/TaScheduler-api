@@ -88,14 +88,6 @@ export const editUser = asyncHandler(
   }
 );
 
-export const forgotPassword = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {}
-);
-
-export const resetPassword = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {}
-);
-
 //* @desc Delete a user
 //* @route DELETE /api/user/:slug
 //* @access private

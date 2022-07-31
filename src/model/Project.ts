@@ -9,6 +9,8 @@ const projectSchema = new Schema<IProject>(
     slug: String,
     description: String,
     status: String,
+    completedTasksCount: Number,
+    unCompletedTasksCount: Number,
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -20,8 +22,19 @@ const projectSchema = new Schema<IProject>(
     },
     updatedAt: Date,
   },
-  { versionKey: false }
+  {
+    versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+projectSchema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "project",
+  justOne: false,
+});
 
 projectSchema.pre("save", function (next) {
   this.updatedAt = new Date();

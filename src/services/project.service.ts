@@ -1,7 +1,11 @@
 import slugify from "slugify";
+import { ErrorResponse, getErrorMessage } from "../utils";
+import { ObjectId } from "mongoose";
 
 // Models
 import { Project } from "./../model";
+// Interfaces
+import { IProject, Status } from "../interfaces";
 
 //* @desc: Get all projects service
 export const getAllProjects = () => {
@@ -61,4 +65,28 @@ export const deleteProjectBySlug = async (slug: string) => {
   } catch (err) {
     return false;
   }
+};
+
+//* @desc: Count Project Tasks
+export const countProjectTasks = async (projectId: ObjectId) => {
+  let completedTasks: number = 0;
+  let unCompletedTasks: number = 0;
+
+  const project = await Project.findOne({ _id: projectId }).populate("tasks");
+
+  if (!project) return false;
+
+  if (project.tasks.length > 0) {
+    for (const task of project.tasks) {
+      if (task.status === Status.Completed) completedTasks += 1;
+      if (task.status !== Status.Completed) unCompletedTasks += 1;
+    }
+  }
+
+  await project.updateOne({
+    completedTasksCount: completedTasks,
+    unCompletedTasksCount: unCompletedTasks,
+  });
+
+  return;
 };

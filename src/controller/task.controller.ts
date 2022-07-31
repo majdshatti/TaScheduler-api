@@ -10,6 +10,7 @@ import {
   deleteTaskBySlug,
   changeStatus,
 } from "../services/task.service";
+import { countProjectTasks } from "../services/project.service";
 // Interfaces
 import { IResponse, ITask, Status, IFilterResponse } from "../interfaces";
 // Utils
@@ -111,10 +112,12 @@ export const completeTask = asyncHandler(
 
     task = await changeStatus(task, Status.Completed);
 
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       data: task,
       message: getSuccessMessage("edit", "task"),
     } as IResponse);
+
+    await countProjectTasks(task.project);
   }
 );

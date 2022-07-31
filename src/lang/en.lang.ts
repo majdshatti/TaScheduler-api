@@ -16,6 +16,8 @@ const enSuccessData = (path: string): successSentances => {
     create: `${path} has been created successfully`,
     edit: `${path} has been edited successfully`,
     delete: `${path} has been delete successfully`,
+    emailSent: `Email is sent successfully`,
+    resetPass: `Password reset successfully`,
   };
 
   return sentances;
@@ -45,6 +47,7 @@ const enErrorData = (path: string, value?: string): errorSentances => {
     serverError: `An error occured while trying to perform this operation.`,
     auth: `Not authenticated to access this route`,
     extraFields: `'${path}' is not recognized as a request parameter.`,
+    invalidToken: "Invailed token",
   };
 
   return sentances;

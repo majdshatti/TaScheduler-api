@@ -23,12 +23,15 @@ export type errorSentances = {
   serverError: string;
   auth: string;
   extraFields: string;
+  invalidToken: string;
 };
 
 export type successSentances = {
   create: string;
   edit: string;
   delete: string;
+  emailSent: string;
+  resetPass: string;
 };
 
 export type langTerms = {

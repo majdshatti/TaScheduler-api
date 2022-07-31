@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTodoIndexById = exports.getPopulatedObject = exports.sendMessage = exports.verifyToken = exports.socketConnection = exports.isObjKey = exports.validate = exports.getSuccessMessage = exports.getErrorMessage = exports.ErrorResponse = void 0;
+exports.resetTemplate = exports.sendEmail = exports.mailTemplate = exports.getTodoIndexById = exports.getPopulatedObject = exports.sendMessage = exports.verifyToken = exports.socketConnection = exports.isObjKey = exports.validate = exports.getSuccessMessage = exports.getErrorMessage = exports.ErrorResponse = void 0;
 const errorResponse_1 = __importDefault(require("./error/errorResponse"));
 exports.ErrorResponse = errorResponse_1.default;
 const validate_1 = __importDefault(require("./validation/validate"));
@@ -23,3 +23,9 @@ const populatedObject_1 = __importDefault(require("./object/populatedObject"));
 exports.getPopulatedObject = populatedObject_1.default;
 const getIndex_1 = __importDefault(require("./array/getIndex"));
 exports.getTodoIndexById = getIndex_1.default;
+const mailTemplate_1 = __importDefault(require("./mail/mailTemplate"));
+exports.mailTemplate = mailTemplate_1.default;
+const sendEmail_1 = __importDefault(require("./mail/sendEmail"));
+exports.sendEmail = sendEmail_1.default;
+const resetPassword_1 = __importDefault(require("./mail/templates/resetPassword"));
+exports.resetTemplate = resetPassword_1.default;

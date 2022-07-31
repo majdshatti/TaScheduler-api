@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.destroyUser = exports.updateUser = exports.getUserBySlug = exports.getUserById = void 0;
+exports.destroyUser = exports.updateUser = exports.getUserByCondition = exports.getUserBySlug = exports.getUserById = void 0;
 // Models
 const model_1 = require("../model/");
 const getUserById = (_id, populate) => __awaiter(void 0, void 0, void 0, function* () {
@@ -22,6 +22,11 @@ const getUserBySlug = (slug, populate) => __awaiter(void 0, void 0, void 0, func
     return model_1.User.findOne({ slug }).populate(populate);
 });
 exports.getUserBySlug = getUserBySlug;
+const getUserByCondition = (condition, populate) => __awaiter(void 0, void 0, void 0, function* () {
+    populate = populate !== null && populate !== void 0 ? populate : "";
+    return model_1.User.findOne(condition).populate("");
+});
+exports.getUserByCondition = getUserByCondition;
 const updateUser = (slug, data) => __awaiter(void 0, void 0, void 0, function* () {
     return model_1.User.findOneAndUpdate({ slug }, data, {
         new: true,

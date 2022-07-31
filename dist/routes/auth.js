@@ -11,4 +11,10 @@ router.route("/login").post(auth_controller_1.login, (0, middleware_1.authValida
 router
     .route("/register")
     .post((0, middleware_1.authValidate)("register"), (0, middleware_1.validationResults)(), auth_controller_1.register);
+router
+    .route("/resetpassword/:token")
+    .post((0, middleware_1.authValidate)("reset"), (0, middleware_1.validationResults)(), auth_controller_1.resetPassword);
+router
+    .route("/forgotpassword")
+    .post((0, middleware_1.authValidate)("forgot"), (0, middleware_1.validationResults)(), auth_controller_1.forgotPassword);
 exports.default = router;

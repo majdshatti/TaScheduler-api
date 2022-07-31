@@ -12,8 +12,12 @@ const authValidate = (validationCase) => {
             return [
                 (0, utils_1.validate)("username").isRequired().isString().isUnique("User").exec(),
                 (0, utils_1.validate)("password").isRequired().isLength(8, 20).exec(),
-                (0, utils_1.validate)("email").isRequired().isEmail().exec(),
+                (0, utils_1.validate)("email").isRequired().isEmail().isUnique("User").exec(),
             ];
+        case "forgot":
+            return [(0, utils_1.validate)("email").isRequired().isEmail().exec()];
+        case "reset":
+            return [(0, utils_1.validate)("password").isRequired().isString().exec()];
         default:
             return [];
     }

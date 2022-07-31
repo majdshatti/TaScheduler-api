@@ -14,6 +14,7 @@ exports.completeTask = exports.deleteTask = exports.editTask = exports.createTas
 const middleware_1 = require("../middleware");
 // Services
 const task_service_1 = require("../services/task.service");
+const project_service_1 = require("../services/project.service");
 // Interfaces
 const interfaces_1 = require("../interfaces");
 // Utils
@@ -86,9 +87,10 @@ exports.deleteTask = (0, middleware_1.asyncHandler)((req, res, next) => __awaite
 exports.completeTask = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let task = req.body.validationResults.Task;
     task = yield (0, task_service_1.changeStatus)(task, interfaces_1.Status.Completed);
-    return res.status(201).json({
+    res.status(201).json({
         success: true,
         data: task,
         message: (0, utils_1.getSuccessMessage)("edit", "task"),
     });
+    yield (0, project_service_1.countProjectTasks)(task.project);
 }));

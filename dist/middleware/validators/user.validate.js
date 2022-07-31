@@ -10,10 +10,6 @@ const userValidate = (validationCase) => {
                 (0, utils_1.validate)("username").optional().isString().isUnique("User").exec(),
                 (0, utils_1.validate)("email").optional().isEmail().isUnique("User").exec(),
             ];
-        case "forgot":
-            return [];
-        case "reset":
-            return [];
         default:
             return [];
     }
