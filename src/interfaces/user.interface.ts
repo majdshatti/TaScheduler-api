@@ -6,7 +6,7 @@ interface IUser {
   password: string;
   email: string;
   resetPasswordToken?: string;
-  resetPasswordExprie?: Date;
+  resetPasswordExpire?: string;
   createdAt?: Date;
   updatedAt?: Date;
 

@@ -8,7 +8,7 @@ interface IError {
   field?: string;
 }
 
-interface IResponse {
+export interface IResponse {
   success: boolean;
   message?: string | langType;
   data?: Object;
