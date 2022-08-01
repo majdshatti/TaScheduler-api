@@ -4,7 +4,10 @@ exports.todoSchema = exports.Todo = void 0;
 const mongoose_1 = require("mongoose");
 const todoSchema = new mongoose_1.Schema({
     paragraph: String,
-    isChecked: Boolean,
+    isChecked: {
+        type: Boolean,
+        default: false,
+    },
 }, { versionKey: false });
 exports.todoSchema = todoSchema;
 const Todo = (0, mongoose_1.model)("Todo", todoSchema);

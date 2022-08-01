@@ -70,9 +70,11 @@ exports.editUser = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(
 //* @access private
 exports.deleteUser = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const userSlug = req.params.slug;
+    // Get user by slug
     let user = yield (0, user_service_1.getUserBySlug)(userSlug);
     if (!user)
         return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "user"), 404));
+    // Delete user account
     yield (0, user_service_1.destroyUser)(user);
     res.status(200).json({
         success: true,

@@ -12,26 +12,26 @@ const router = (0, express_1.Router)();
 //*********** TODO ROUTES *************/
 //*************************************/
 router
-    .route("/:slug/todo/:todoId/check")
+    .route("/:id/todo/:todoId/check")
     .put((0, middleware_1.todoValidate)("check"), (0, middleware_1.validationResults)(), todo_controller_1.editTodoCheck);
 router
-    .route("/:slug/todo/:todoId")
+    .route("/:id/todo/:todoId")
     .put((0, middleware_1.todoValidate)("edit"), (0, middleware_1.validationResults)(), todo_controller_1.editTodoData)
     .delete((0, middleware_1.todoValidate)("delete"), (0, middleware_1.validationResults)(), todo_controller_1.removeTodo);
 router
-    .route("/:slug/todo")
+    .route("/:id/todo")
     .post((0, middleware_1.todoValidate)("create"), (0, middleware_1.validationResults)(), todo_controller_1.addTodo);
 //*************************************/
 //*********** TASK ROUTES *************/
 //*************************************/
 router
-    .route("/:slug/complete")
+    .route("/:id/complete")
     .put((0, middleware_1.taskValidate)("complete"), (0, middleware_1.validationResults)(), task_controller_1.completeTask);
 router
-    .route("/:slug")
+    .route("/:id")
     .get(task_controller_1.getSingleTask)
     .put((0, middleware_1.taskValidate)("edit"), (0, middleware_1.validationResults)(), task_controller_1.editTask)
-    .delete(task_controller_1.deleteTask);
+    .delete((0, middleware_1.taskValidate)("delete"), (0, middleware_1.validationResults)(), task_controller_1.deleteTask);
 router
     .route("/")
     .get((0, middleware_1.filter)("Task", "user project"), task_controller_1.getTasks)

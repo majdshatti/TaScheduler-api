@@ -23,17 +23,9 @@ const getAllProjects = () => {
     return model_1.Project.find();
 };
 exports.getAllProjects = getAllProjects;
-//* @desc: Get a single project by condition
+//* @desc: Get a single project by slug service
 const getProjectBySlug = (condition) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const project = yield model_1.Project.findOne(condition).populate("user");
-        if (!project)
-            return false;
-        return project;
-    }
-    catch (err) {
-        return false;
-    }
+    return yield model_1.Project.findOne(condition).populate("user");
 });
 exports.getProjectBySlug = getProjectBySlug;
 //* @desc: Create a project service
@@ -50,27 +42,14 @@ const updateProject = (slug, body) => __awaiter(void 0, void 0, void 0, function
         description: description !== null && description !== void 0 ? description : undefined,
         updatedAt: new Date(),
     };
-    try {
-        return yield model_1.Project.findOneAndUpdate({ slug }, updateObject, {
-            new: true,
-        });
-    }
-    catch (err) {
-        return false;
-    }
+    return model_1.Project.findOneAndUpdate({ slug }, updateObject, {
+        new: true,
+    });
 });
 exports.updateProject = updateProject;
 //* @desc: Delete a project service
 const deleteProjectBySlug = (slug) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const isDeleted = yield model_1.Project.findOneAndRemove({ slug });
-        if (!isDeleted)
-            return false;
-        return true;
-    }
-    catch (err) {
-        return false;
-    }
+    return yield model_1.Project.findOneAndRemove({ slug });
 });
 exports.deleteProjectBySlug = deleteProjectBySlug;
 //* @desc: Count Project Tasks

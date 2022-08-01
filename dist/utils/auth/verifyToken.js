@@ -13,18 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const user_service_1 = require("../../services/user.service");
+// Get an id from a token
 const verifyToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        let user;
-        if (typeof decoded !== "string") {
-            user = yield (0, user_service_1.getUserById)(decoded.id);
-        }
-        return user;
-    }
-    catch (err) {
-        return Promise.reject("Unauthorized to access");
-    }
+    // Decode a token to get a payload
+    const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+    if (typeof decoded !== "string")
+        return decoded.id;
+    return false;
 });
 exports.default = verifyToken;

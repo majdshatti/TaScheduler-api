@@ -9,10 +9,10 @@ const router = (0, express_1.Router)();
 router
     .route("/")
     .get((0, middleware_1.filter)("Project"), project_controller_1.getProjects)
-    .post((0, middleware_1.projectValidate)("edit"), (0, middleware_1.validationResults)(), project_controller_1.saveProject);
+    .post((0, middleware_1.projectValidate)("create"), (0, middleware_1.validationResults)(), project_controller_1.saveProject);
 router
     .route("/:slug")
     .get(project_controller_1.getSingleProject)
-    .put(project_controller_1.editProject)
+    .put((0, middleware_1.projectValidate)("edit"), (0, middleware_1.validationResults)(), project_controller_1.editProject)
     .delete(project_controller_1.deleteProject);
 exports.default = router;

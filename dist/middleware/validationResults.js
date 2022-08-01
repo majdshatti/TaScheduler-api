@@ -47,7 +47,6 @@ const results = () => (req, res, next) => {
             errors: unMatchedFields,
         });
     }
-    console.log(validatedData, unMatchedFields);
     next();
 };
 exports.default = results;

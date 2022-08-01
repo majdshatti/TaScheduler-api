@@ -21,37 +21,48 @@ const interfaces_1 = require("../interfaces");
 const utils_1 = require("../utils");
 //* @desc: Check task status and change them
 const checkTaskStatus = () => () => __awaiter(void 0, void 0, void 0, function* () {
+    // Get all tasks
     let tasks = yield (0, task_service_1.getAllTasks)();
+    // Loop over all tasks
     for (const task of tasks) {
+        // Get the user of a task to be notified in case of an event
         const user = (0, utils_1.getPopulatedObject)(task.user);
+        // Gather dates
         const startDate = new Date(task.startDate).getTime();
         const dueDate = new Date(task.dueDate).getTime();
         const currentDate = new Date().getTime();
+        // Task hold status
         if (currentDate < startDate && task.status != interfaces_1.Status.Hold) {
-            logStatusChange(task._id, task.status, interfaces_1.Status.Active);
+            logStatusChange(task._id.toString(), task.status, interfaces_1.Status.Active);
+            // Set status
             task.status = interfaces_1.Status.Hold;
         }
+        // Task overdue status
         if (currentDate > dueDate &&
             task.status != interfaces_1.Status.Overdue &&
             task.status != interfaces_1.Status.Completed) {
-            logStatusChange(task._id, task.status, interfaces_1.Status.Overdue);
+            logStatusChange(task._id.toString(), task.status, interfaces_1.Status.Overdue);
+            // Set status
             task.status = interfaces_1.Status.Overdue;
+            // Notify a user that task status has changed
             const isSent = (0, utils_1.sendMessage)(user._id, "notification", {
                 message: "Overdue alart!",
             });
-            if (isSent)
-                console.log("did send a message");
         }
+        // Task active status
         if (currentDate > startDate &&
             currentDate < dueDate &&
             task.status != interfaces_1.Status.Active) {
-            logStatusChange(task._id, task.status, interfaces_1.Status.Active);
+            logStatusChange(task._id.toString(), task.status, interfaces_1.Status.Active);
+            // Set stauts
             task.status = interfaces_1.Status.Active;
         }
+        // Update task status
         yield task.updateOne({ status: task.status });
     }
-    console.log(colors_1.default.green("Task status Scheduler has successfully ran at time: " + new Date()));
+    console.log(colors_1.default.green.italic("Task status Scheduler has successfully ran at time: " + new Date()));
 });
+// Log status changes
 const logStatusChange = (taskId, oldStatus, newStatus) => {
     console.log(colors_1.default.magenta(`${taskId} status changed from ${oldStatus} to ${newStatus}`));
 };

@@ -17,50 +17,75 @@ const todo_service_1 = require("../services/todo.service");
 const task_service_1 = require("../services/task.service");
 // Utils
 const utils_1 = require("../utils");
-//* @desc Create a task
-//* @route PUT /api/project/:slug/todo
-//* @access private
+//* @desc Add a todo to a task
+//* @route POST /api/task/:id/todo
+//* @access `REGISTERED USER`
 exports.addTodo = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const paragraph = req.body.paragraph;
-    const taskSlug = req.params.slug;
-    const task = yield (0, todo_service_1.pushTodo)(taskSlug, paragraph);
+    const taskId = req.params.id;
+    const loggedUserId = req.user._id;
+    let task = yield (0, task_service_1.getTaskById)(taskId);
+    // Check if task exists
     if (!task)
         return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "task"), 404));
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+        return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("auth", "task"), 401));
+    // Add a todo to task
+    task = yield (0, todo_service_1.pushTodo)(task, paragraph);
     return res.status(200).json({
         success: true,
         data: task,
         message: (0, utils_1.getSuccessMessage)("edit", "task"),
     });
 }));
-//* @desc Create a task
-//* @route PUT /api/project/:slug/todo/:id
-//* @access private
+//* @desc Remove a todo from a task
+//* @route DELETE /api/task/:id/todo/:id
+//* @access `REGISTERED USER`
 exports.removeTodo = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const taskSlug = req.params.slug;
+    const taskId = req.params.id;
     const todoId = req.params.todoId;
-    const task = yield (0, todo_service_1.pullTodo)(taskSlug, todoId);
+    const loggedUserId = req.user._id;
+    let task = yield (0, task_service_1.getTaskById)(taskId);
+    // Check if task exists
     if (!task)
         return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "task"), 404));
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+        return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("auth", "task"), 401));
+    // Check if exists and Get todo array index
+    const { index, isTodoExist } = (0, utils_1.getTodoIndexById)(task.todos, todoId);
+    if (!isTodoExist || index < 0)
+        return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "todo"), 404));
+    // Remove a todo from a task
+    const newTask = yield (0, todo_service_1.pullTodo)(task, index);
     return res.status(200).json({
         success: true,
-        data: task,
-        message: (0, utils_1.getSuccessMessage)("edit", "task"),
+        data: newTask,
+        message: (0, utils_1.getSuccessMessage)("delete", "todo"),
     });
 }));
 //* @desc Edit a todo
-//* @route PUT /api/project/:slug/todo/:id
-//* @access private
+//* @route PUT /api/task/:id/todo/:id
+//* @access `REGISTERED USER`
 exports.editTodoData = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const taskSlug = req.params.slug;
-    const paragraph = req.body.paragraph;
+    const taskId = req.params.id;
     const todoId = req.params.todoId;
-    let task = yield (0, task_service_1.getTaskBySlug)(taskSlug);
+    const paragraph = req.body.paragraph;
+    const loggedUserId = req.user._id;
+    let task = yield (0, task_service_1.getTaskById)(taskId);
+    // Check if task exists
     if (!task)
         return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "task"), 404));
-    const todoIndex = (0, utils_1.getTodoIndexById)(task.todos, todoId).index;
-    if (todoIndex < 0)
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+        return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("auth", "task"), 401));
+    // Check if exists and Get todo array index
+    const { index, isTodoExist } = (0, utils_1.getTodoIndexById)(task.todos, todoId);
+    if (!isTodoExist || index < 0)
         return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "todo"), 404));
-    task = yield (0, todo_service_1.editTodo)(task, todoIndex, { paragraph });
+    // Edit todo
+    task = yield (0, todo_service_1.editTodo)(task, index, { paragraph });
     res.status(200).json({
         success: true,
         data: task,
@@ -68,30 +93,25 @@ exports.editTodoData = (0, middleware_1.asyncHandler)((req, res, next) => __awai
     });
 }));
 //* @desc Check a todo
-//* @route PUT /api/project/:slug/todo/:id/check
-//* @access private
+//* @route PUT /api/task/:id/todo/:id/check
+//* @access `REGISTERED USER`
 exports.editTodoCheck = (0, middleware_1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const taskSlug = req.params.slug;
+    const taskId = req.params.id;
     const todoId = req.params.todoId;
-    let task = (yield (0, task_service_1.getTaskBySlug)(taskSlug));
+    const loggedUserId = req.user._id;
+    let task = yield (0, task_service_1.getTaskById)(taskId);
+    // Check if task exists
     if (!task)
         return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "task"), 404));
-    // Search if todo if is exist
-    let isTodoExist = false;
-    let todoIndex = -1;
-    if ((task === null || task === void 0 ? void 0 : task.todos) && task.todos.length > 0) {
-        task.todos.map((todo, index) => {
-            if (todo._id.equals(todoId)) {
-                isTodoExist = true;
-                // Get the index to modify isChecked
-                todoIndex = index;
-            }
-        });
-    }
-    if (!isTodoExist || todoIndex < 0)
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+        return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("auth", "task"), 401));
+    // Check if exists and Get todo array index
+    const { index, isTodoExist } = (0, utils_1.getTodoIndexById)(task.todos, todoId);
+    if (!isTodoExist || index < 0)
         return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "todo"), 404));
     // Change isChecked to !isChecked
-    const newTask = yield (0, todo_service_1.toggleTodo)(task, todoIndex);
+    const newTask = yield (0, todo_service_1.toggleTodo)(task, index);
     res.status(200).json({
         success: true,
         data: newTask,

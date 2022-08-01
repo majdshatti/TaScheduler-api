@@ -6,7 +6,7 @@ import colors from "colors";
 // Environment variables
 import dotenv from "dotenv";
 // Models
-import { User, Task } from "./model";
+import { User, Task, Project } from "./model";
 
 //*********************************************/
 // * -c Insert constant data                  */
@@ -26,6 +26,7 @@ const deleteData = async () => {
   try {
     await User.deleteMany();
     await Task.deleteMany();
+    await Project.deleteMany();
 
     console.log(colors.red.inverse("All data deleted..."));
     process.exit();

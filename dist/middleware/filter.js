@@ -15,22 +15,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const filter = (model, populate) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let query;
+    const request = req;
     const reqQuery = Object.assign({}, req.query);
-    // Don't need to filter over select, sort, page, ..etc
-    const removeFields = [
-        "select",
-        "sort",
-        "page",
-        "limit",
-        "like",
-        "populate",
-    ];
+    // Don't filter over query operators
+    const removeFields = ["select", "sort", "page", "limit", "populate"];
     removeFields.forEach(param => delete reqQuery[param]);
     // Greate than, less than, ..etc queries support
     let queryStr = JSON.stringify(reqQuery);
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in|regex)\b/g, match => `$${match}`);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
     // Reparse the json string after cleaning
     let params = JSON.parse(queryStr);
+    // Filter by user id to get his projects and tasks
+    if (model === "Task" || model === "Project") {
+        params.user = request.user._id;
+    }
     query = mongoose_1.default.model(model).find(params);
     // SELECT fields
     if (req.query.select) {
@@ -47,10 +45,10 @@ const filter = (model, populate) => (req, res, next) => __awaiter(void 0, void 0
     else {
         query = query.sort("-createdAt");
     }
+    // PAGINATION
     const pagination = { next: {}, prev: {} };
     const total = yield query.clone().countDocuments();
     let pageCount = 1;
-    // PAGINATION
     if (req.query.limit) {
         let page = 1;
         let limit = 10;

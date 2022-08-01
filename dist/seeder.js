@@ -34,6 +34,7 @@ const deleteData = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield model_1.User.deleteMany();
         yield model_1.Task.deleteMany();
+        yield model_1.Project.deleteMany();
         console.log(colors_1.default.red.inverse("All data deleted..."));
         process.exit();
     }

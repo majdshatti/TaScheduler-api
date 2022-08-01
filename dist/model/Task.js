@@ -13,13 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
-const slugify_1 = __importDefault(require("slugify"));
 // Schemas
 const _1 = require("./");
 // Interfaces
 const interfaces_1 = require("./../interfaces");
 // Services
 const project_service_1 = require("../services/project.service");
+// Utils
+const slugify_1 = __importDefault(require("slugify"));
+//* Task Schema
 const taskSchema = new mongoose_1.Schema({
     name: String,
     slug: String,
@@ -47,18 +49,20 @@ const taskSchema = new mongoose_1.Schema({
     },
     updatedAt: Date,
 }, { versionKey: false });
+// Auto set slug, updatedAt and initial status before saving document
 taskSchema.pre("save", function (next) {
     this.updatedAt = new Date();
     this.slug = (0, slugify_1.default)(this.name, { lower: true });
     this.status = setInitStatus(this.startDate, this.dueDate);
     next();
 });
+// After saving, change the project completion counts
 taskSchema.post("save", function () {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, project_service_1.countProjectTasks)(this.project);
     });
 });
-//* @desc Set an initial value for the status of a task
+// Set an initial value for the status of a task
 const setInitStatus = function (sDate, eDate) {
     let initStatus = interfaces_1.Status.Active;
     const startDate = new Date(sDate).getTime();

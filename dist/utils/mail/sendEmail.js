@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const __1 = require("../");
 const sendEmail = (options) => __awaiter(void 0, void 0, void 0, function* () {
+    // send mail with defined transport object
     const transport = nodemailer_1.default.createTransport({
         host: process.env.SMTP_HOST,
         port: process.env.SMTP_PORT,
@@ -23,14 +24,16 @@ const sendEmail = (options) => __awaiter(void 0, void 0, void 0, function* () {
             pass: process.env.SMTP_PASSWORD,
         },
     });
+    // Get an html template
     let html = (0, __1.mailTemplate)(options.template, options.value);
-    // send mail with defined transport object
+    // Form message header and body
     const message = {
         from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
         to: options.email,
         subject: options.subject,
         html: html,
     };
+    // Get sending email results
     const info = yield transport.sendMail(message);
     console.log("Message sent: %s", info.messageId);
 });

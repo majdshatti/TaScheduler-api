@@ -12,15 +12,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticate = void 0;
 const _1 = require("./");
 const utils_1 = require("../utils");
+const user_service_1 = require("../services/user.service");
 exports.authenticate = (0, _1.asyncHandler)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token = "";
+    // Check for a bearer token is sent form the client
     if (req.headers.authorization &&
         req.headers.authorization.startsWith("Bearer"))
         token = req.headers.authorization.split(" ")[1];
     if (!token)
         return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("auth", "user"), 401));
     try {
-        const user = yield (0, utils_1.verifyToken)(token);
+        // Get a user id from token
+        const userId = yield (0, utils_1.verifyToken)(token);
+        // Check if user id is vailed
+        if (!userId)
+            return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("auth", "user"), 401));
+        // Get user by id
+        const user = yield (0, user_service_1.getUserById)(userId);
+        // Check if user exist
         if (!user)
             return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("auth", "user"), 401));
         req.user = user;

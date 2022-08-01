@@ -16,58 +16,34 @@ exports.editTodo = exports.toggleTodo = exports.pullTodo = exports.pushTodo = vo
 const mongoose_1 = __importDefault(require("mongoose"));
 // Models
 const model_1 = require("../model");
-const utils_1 = require("../utils");
 //* @desc: Add todo to task
-const pushTodo = (taskSlug, paragraph) => __awaiter(void 0, void 0, void 0, function* () {
+const pushTodo = (task, paragraph) => __awaiter(void 0, void 0, void 0, function* () {
     const todo = {
         _id: new mongoose_1.default.Types.ObjectId(),
         paragraph,
         isChecked: false,
     };
-    try {
-        const task = yield model_1.Task.findOneAndUpdate({ slug: taskSlug }, { $push: { todos: todo } }, { new: true });
-        if (!task)
-            return false;
-        return task;
-    }
-    catch (err) {
-        return false;
-    }
+    const newTask = yield model_1.Task.findOneAndUpdate({ id: task._id }, { $push: { todos: todo } }, { new: true });
+    return newTask;
 });
 exports.pushTodo = pushTodo;
 //* @desc: Remove Todo from task
-const pullTodo = (taskSlug, todoId) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const task = yield model_1.Task.findOneAndUpdate({ slug: taskSlug }, { $pull: { todos: { _id: todoId } } }, { new: true });
-        if (!task)
-            return false;
-        return task;
-    }
-    catch (err) {
-        return false;
-    }
+const pullTodo = (task, todoIndex) => __awaiter(void 0, void 0, void 0, function* () {
+    task.todos.splice(todoIndex, 1);
+    task.markModified("todos");
+    return task.save();
 });
 exports.pullTodo = pullTodo;
 //* @desc: Edit todo isChecked
 const toggleTodo = (task, todoIndex) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        task.todos[todoIndex].isChecked = !task.todos[todoIndex].isChecked;
-        task.markModified("todos");
-        return yield task.save();
-    }
-    catch (err) {
-        return Promise.reject("");
-    }
+    task.todos[todoIndex].isChecked = !task.todos[todoIndex].isChecked;
+    task.markModified("todos");
+    return task.save();
 });
 exports.toggleTodo = toggleTodo;
 //* @desc: Edit todo
 const editTodo = (task, todoIndex, data) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        task.todos[todoIndex].paragraph = data.paragraph;
-        return yield model_1.Task.findOneAndUpdate(task._id, task, { new: true });
-    }
-    catch (err) {
-        return Promise.reject((0, utils_1.getErrorMessage)("serverError", "todo"));
-    }
+    task.todos[todoIndex].paragraph = data.paragraph;
+    return model_1.Task.findOneAndUpdate(task._id, task, { new: true });
 });
 exports.editTodo = editTodo;

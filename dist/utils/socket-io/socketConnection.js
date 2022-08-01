@@ -17,6 +17,8 @@ exports.sendMessage = exports.socketConnection = void 0;
 const socket_io_1 = require("socket.io");
 const verifyToken_1 = __importDefault(require("../auth/verifyToken"));
 const utils_1 = require("../../utils");
+// User service
+const user_service_1 = require("../../services/user.service");
 let clients = [];
 let io;
 const socketConnection = (httpServer) => {
@@ -26,7 +28,16 @@ const socketConnection = (httpServer) => {
         const token = socket.handshake.auth.token;
         if (!token)
             return next(new utils_1.ErrorResponse({ en: "test", ar: "test" }, 401));
-        const user = yield (0, verifyToken_1.default)(token);
+        // Get a user id from token
+        const userId = yield (0, verifyToken_1.default)(token);
+        // Check if user id is vailed
+        if (!userId)
+            return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("auth", "user"), 401));
+        // Get user by id
+        const user = yield (0, user_service_1.getUserById)(userId);
+        // Check if user exist
+        if (!user)
+            return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("auth", "user"), 401));
         if (!user)
             return next(new utils_1.ErrorResponse((0, utils_1.getErrorMessage)("exist", "User"), 404));
         socket.data.user = user;
