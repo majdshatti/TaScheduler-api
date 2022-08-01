@@ -1,10 +1,11 @@
-import { ITodo } from "../../interfaces";
+import { ITodoDocument } from "../../interfaces";
 
-const getTodoIndexById = (array: ITodo[], id: string) => {
+// Get an element inside task.todos
+const getTodoIndexById = (array: ITodoDocument[], id: string) => {
   let isTodoExist = false;
   let todoIndex = -1;
 
-  array.map((element: ITodo, index) => {
+  array.map((element: ITodoDocument, index) => {
     if (element._id.equals(id)) {
       isTodoExist = true;
       todoIndex = index;

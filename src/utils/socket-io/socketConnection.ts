@@ -9,10 +9,10 @@ import {
   InterServerEvents,
   ClientToServerEvents,
   SocketData,
-  IUser,
-  IUserDocument,
 } from "./../../interfaces";
-import { ClientSession } from "mongoose";
+
+// User service
+import { getUserById } from "../../services/user.service";
 
 let clients: { userId: string; socketId: string }[] = [];
 
@@ -37,7 +37,19 @@ export const socketConnection = (httpServer: any) => {
 
     if (!token) return next(new ErrorResponse({ en: "test", ar: "test" }, 401));
 
-    const user = await verifyToken(token);
+    // Get a user id from token
+    const userId = await verifyToken(token);
+
+    // Check if user id is vailed
+    if (!userId)
+      return next(new ErrorResponse(getErrorMessage("auth", "user"), 401));
+
+    // Get user by id
+    const user = await getUserById(userId);
+
+    // Check if user exist
+    if (!user)
+      return next(new ErrorResponse(getErrorMessage("auth", "user"), 401));
 
     if (!user)
       return next(new ErrorResponse(getErrorMessage("exist", "User"), 404));

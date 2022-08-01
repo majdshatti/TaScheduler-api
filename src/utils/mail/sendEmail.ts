@@ -3,6 +3,7 @@ import { mailTemplate } from "../";
 import { IMailOptions } from "../../interfaces";
 
 const sendEmail = async (options: any) => {
+  // send mail with defined transport object
   const transport = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
@@ -12,9 +13,10 @@ const sendEmail = async (options: any) => {
     },
   });
 
+  // Get an html template
   let html = mailTemplate(options.template, options.value);
 
-  // send mail with defined transport object
+  // Form message header and body
   const message: IMailOptions = {
     from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
     to: options.email,
@@ -22,6 +24,7 @@ const sendEmail = async (options: any) => {
     html: html,
   };
 
+  // Get sending email results
   const info = await transport.sendMail(message);
 
   console.log("Message sent: %s", info.messageId);
