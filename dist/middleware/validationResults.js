@@ -26,13 +26,18 @@ const results = () => (req, res, next) => {
     for (const key in validatedData) {
         fields.push(key);
     }
+    if (req.body.validationResults) {
+        fields.push("validationResults");
+    }
     // Extra attributes errors
-    for (const bodyFields in req.body) {
-        if (!fields.includes(bodyFields)) {
-            unMatchedFields.push({
-                path: bodyFields,
-                message: (0, utils_1.getErrorMessage)("extraFields", bodyFields),
-            });
+    if (req.body) {
+        for (const bodyFields in req.body) {
+            if (!fields.includes(bodyFields)) {
+                unMatchedFields.push({
+                    path: bodyFields,
+                    message: (0, utils_1.getErrorMessage)("extraFields", bodyFields),
+                });
+            }
         }
     }
     // Return error response with validation results
@@ -42,6 +47,7 @@ const results = () => (req, res, next) => {
             errors: unMatchedFields,
         });
     }
+    console.log(validatedData, unMatchedFields);
     next();
 };
 exports.default = results;

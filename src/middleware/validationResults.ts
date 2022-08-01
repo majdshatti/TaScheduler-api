@@ -32,13 +32,19 @@ const results = () => (req: Request, res: Response, next: NextFunction) => {
     fields.push(key);
   }
 
+  if (req.body.validationResults) {
+    fields.push("validationResults");
+  }
+
   // Extra attributes errors
-  for (const bodyFields in req.body) {
-    if (!fields.includes(bodyFields)) {
-      unMatchedFields.push({
-        path: bodyFields,
-        message: getErrorMessage("extraFields", bodyFields),
-      });
+  if (req.body) {
+    for (const bodyFields in req.body) {
+      if (!fields.includes(bodyFields)) {
+        unMatchedFields.push({
+          path: bodyFields,
+          message: getErrorMessage("extraFields", bodyFields),
+        });
+      }
     }
   }
 
@@ -49,6 +55,7 @@ const results = () => (req: Request, res: Response, next: NextFunction) => {
       errors: unMatchedFields,
     });
   }
+  console.log(validatedData, unMatchedFields);
 
   next();
 };
