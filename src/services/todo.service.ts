@@ -2,68 +2,50 @@ import mongoose from "mongoose";
 // Models
 import { Task } from "../model";
 // Interfaces
-import { ITask, ITodo } from "../interfaces";
+import { ITaskDocument, ITodo, ITodoDocument } from "../interfaces";
+// Utils
 import { getErrorMessage } from "../utils";
 
 //* @desc: Add todo to task
-export const pushTodo = async (taskSlug: string, paragraph: string) => {
+export const pushTodo = async (task: ITaskDocument, paragraph: string) => {
   const todo = {
     _id: new mongoose.Types.ObjectId(),
     paragraph,
     isChecked: false,
-  } as ITodo;
+  } as ITodoDocument;
 
-  try {
-    const task = await Task.findOneAndUpdate(
-      { slug: taskSlug },
-      { $push: { todos: todo } },
-      { new: true }
-    );
+  const newTask = await Task.findOneAndUpdate(
+    { id: task._id },
+    { $push: { todos: todo } },
+    { new: true }
+  );
 
-    if (!task) return false;
-
-    return task;
-  } catch (err) {
-    return false;
-  }
+  return newTask;
 };
 
 //* @desc: Remove Todo from task
-export const pullTodo = async (taskSlug: string, todoId: string) => {
-  try {
-    const task = await Task.findOneAndUpdate(
-      { slug: taskSlug },
-      { $pull: { todos: { _id: todoId } } },
-      { new: true }
-    );
+export const pullTodo = async (task: ITaskDocument, todoIndex: number) => {
+  task.todos.splice(todoIndex, 1);
+  task.markModified("todos");
 
-    if (!task) return false;
-
-    return task;
-  } catch (err) {
-    return false;
-  }
+  return task.save();
 };
 
 //* @desc: Edit todo isChecked
-export const toggleTodo = async (task: ITask, todoIndex: number) => {
-  try {
-    task.todos[todoIndex].isChecked = !task.todos[todoIndex].isChecked;
-    task.markModified("todos");
+export const toggleTodo = async (task: ITaskDocument, todoIndex: number) => {
+  task.todos[todoIndex].isChecked = !task.todos[todoIndex].isChecked;
+  task.markModified("todos");
 
-    return await task.save();
-  } catch (err) {
-    return Promise.reject("");
-  }
+  return task.save();
 };
 
 //* @desc: Edit todo
-export const editTodo = async (task: ITask, todoIndex: number, data: ITodo) => {
-  try {
-    task.todos[todoIndex].paragraph = data.paragraph;
+export const editTodo = async (
+  task: ITaskDocument,
+  todoIndex: number,
+  data: ITodo
+) => {
+  task.todos[todoIndex].paragraph = data.paragraph;
 
-    return await Task.findOneAndUpdate(task._id, task, { new: true });
-  } catch (err) {
-    return Promise.reject(getErrorMessage("serverError", "todo"));
-  }
+  return Task.findOneAndUpdate(task._id, task, { new: true });
 };

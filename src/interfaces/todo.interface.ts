@@ -1,9 +1,10 @@
-import mongoose from "mongoose";
+import { Document, Types } from "mongoose";
 
 interface ITodo extends Document {
-  _id: mongoose.Types.ObjectId;
   paragraph: string;
   isChecked?: boolean;
 }
 
-export default ITodo;
+interface ITodoDocument extends ITodo, Document {}
+
+export { ITodo, ITodoDocument };

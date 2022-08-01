@@ -8,9 +8,9 @@ import {
   toggleTodo,
   editTodo,
 } from "../services/todo.service";
-import { getTaskBySlug } from "../services/task.service";
+import { getTaskById } from "../services/task.service";
 // Interfaces
-import { IResponse, ITask, ITodo } from "../interfaces";
+import { IResponse, ITaskDocument, ITodo, IAuthRequest } from "../interfaces";
 // Utils
 import {
   ErrorResponse,
@@ -19,18 +19,27 @@ import {
   getTodoIndexById,
 } from "../utils";
 
-//* @desc Create a task
-//* @route PUT /api/project/:slug/todo
-//* @access private
+//* @desc Add a todo to a task
+//* @route POST /api/task/:id/todo
+//* @access `REGISTERED USER`
 export const addTodo = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
     const paragraph: string = req.body.paragraph;
-    const taskSlug = req.params.slug;
+    const taskId = req.params.id;
+    const loggedUserId = req.user._id;
 
-    const task = await pushTodo(taskSlug, paragraph);
+    let task = await getTaskById(taskId);
 
+    // Check if task exists
     if (!task)
       return next(new ErrorResponse(getErrorMessage("exist", "task"), 404));
+
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
+
+    // Add a todo to task
+    task = await pushTodo(task, paragraph);
 
     return res.status(200).json({
       success: true,
@@ -40,47 +49,70 @@ export const addTodo = asyncHandler(
   }
 );
 
-//* @desc Create a task
-//* @route PUT /api/project/:slug/todo/:id
-//* @access private
+//* @desc Remove a todo from a task
+//* @route DELETE /api/task/:id/todo/:id
+//* @access `REGISTERED USER`
 export const removeTodo = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const taskSlug: string = req.params.slug;
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
+    const taskId: string = req.params.id;
     const todoId: string = req.params.todoId;
+    const loggedUserId = req.user._id;
 
-    const task = await pullTodo(taskSlug, todoId);
+    let task = await getTaskById(taskId);
 
+    // Check if task exists
     if (!task)
       return next(new ErrorResponse(getErrorMessage("exist", "task"), 404));
 
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
+
+    // Check if exists and Get todo array index
+    const { index, isTodoExist } = getTodoIndexById(task.todos, todoId);
+
+    if (!isTodoExist || index < 0)
+      return next(new ErrorResponse(getErrorMessage("exist", "todo"), 404));
+
+    // Remove a todo from a task
+    const newTask = await pullTodo(task, index);
+
     return res.status(200).json({
       success: true,
-      data: task,
-      message: getSuccessMessage("edit", "task"),
+      data: newTask,
+      message: getSuccessMessage("delete", "todo"),
     });
   }
 );
 
 //* @desc Edit a todo
-//* @route PUT /api/project/:slug/todo/:id
-//* @access private
+//* @route PUT /api/task/:id/todo/:id
+//* @access `REGISTERED USER`
 export const editTodoData = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const taskSlug = req.params.slug;
-    const paragraph = req.body.paragraph as string;
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
+    const taskId = req.params.id;
     const todoId = req.params.todoId;
+    const paragraph = req.body.paragraph as string;
+    const loggedUserId = req.user._id;
 
-    let task = await getTaskBySlug(taskSlug);
+    let task = await getTaskById(taskId);
 
+    // Check if task exists
     if (!task)
       return next(new ErrorResponse(getErrorMessage("exist", "task"), 404));
 
-    const todoIndex = getTodoIndexById(task.todos, todoId).index;
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
 
-    if (todoIndex < 0)
+    // Check if exists and Get todo array index
+    const { index, isTodoExist } = getTodoIndexById(task.todos, todoId);
+
+    if (!isTodoExist || index < 0)
       return next(new ErrorResponse(getErrorMessage("exist", "todo"), 404));
 
-    task = await editTodo(task, todoIndex, { paragraph } as ITodo);
+    // Edit todo
+    task = await editTodo(task, index, { paragraph } as ITodo);
 
     res.status(200).json({
       success: true,
@@ -91,37 +123,32 @@ export const editTodoData = asyncHandler(
 );
 
 //* @desc Check a todo
-//* @route PUT /api/project/:slug/todo/:id/check
+//* @route PUT /api/task/:id/todo/:id/check
 //* @access private
 export const editTodoCheck = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const taskSlug = req.params.slug;
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
+    const taskId = req.params.id;
     const todoId = req.params.todoId;
+    const loggedUserId = req.user._id;
 
-    let task = (await getTaskBySlug(taskSlug)) as ITask;
+    let task = await getTaskById(taskId);
 
+    // Check if task exists
     if (!task)
       return next(new ErrorResponse(getErrorMessage("exist", "task"), 404));
 
-    // Search if todo if is exist
-    let isTodoExist = false;
-    let todoIndex: number = -1;
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
 
-    if (task?.todos && task.todos.length > 0) {
-      task.todos.map((todo, index) => {
-        if (todo._id.equals(todoId)) {
-          isTodoExist = true;
-          // Get the index to modify isChecked
-          todoIndex = index;
-        }
-      });
-    }
+    // Check if exists and Get todo array index
+    const { index, isTodoExist } = getTodoIndexById(task.todos, todoId);
 
-    if (!isTodoExist || todoIndex < 0)
+    if (!isTodoExist || index < 0)
       return next(new ErrorResponse(getErrorMessage("exist", "todo"), 404));
 
     // Change isChecked to !isChecked
-    const newTask = await toggleTodo(task, todoIndex);
+    const newTask = await toggleTodo(task, index);
 
     res.status(200).json({
       success: true,

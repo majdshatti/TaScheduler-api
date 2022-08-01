@@ -1,15 +1,18 @@
 import { Schema, model } from "mongoose";
 
-import { ITodo } from "./../interfaces";
+import { ITodoDocument } from "./../interfaces";
 
-const todoSchema = new Schema<ITodo>(
+const todoSchema = new Schema<ITodoDocument>(
   {
     paragraph: String,
-    isChecked: Boolean,
+    isChecked: {
+      type: Boolean,
+      default: false,
+    },
   },
   { versionKey: false }
 );
 
-const Todo = model<ITodo>("Todo", todoSchema);
+const Todo = model<ITodoDocument>("Todo", todoSchema);
 
 export { Todo, todoSchema };
