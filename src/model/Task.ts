@@ -3,14 +3,14 @@ import { Schema, model, Query } from "mongoose";
 // Schemas
 import { todoSchema } from "./";
 // Interfaces
-import { ITask, IUserDocument, Status } from "./../interfaces";
+import { ITaskDocument, Status } from "./../interfaces";
 // Services
 import { countProjectTasks } from "../services/project.service";
 // Utils
 import slugify from "slugify";
 
 //* Task Schema
-const taskSchema = new Schema<ITask>(
+const taskSchema = new Schema<ITaskDocument>(
   {
     name: String,
     slug: String,
@@ -68,5 +68,5 @@ const setInitStatus = function (sDate: Date, eDate: Date) {
   return initStatus;
 };
 
-const Task = model<ITask>("Task", taskSchema);
+const Task = model<ITaskDocument>("Task", taskSchema);
 export default Task;
