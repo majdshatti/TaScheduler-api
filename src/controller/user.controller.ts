@@ -95,11 +95,13 @@ export const deleteUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const userSlug = req.params.slug;
 
+    // Get user by slug
     let user = await getUserBySlug(userSlug);
 
     if (!user)
       return next(new ErrorResponse(getErrorMessage("exist", "user"), 404));
 
+    // Delete user account
     await destroyUser(user);
 
     res.status(200).json({

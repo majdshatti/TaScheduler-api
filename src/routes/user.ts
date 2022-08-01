@@ -20,7 +20,7 @@ router
   .route("/:slug")
   .get(getSingleUser)
   .put(userValidate("edit"), validationResults(), editUser)
-  .delete(userValidate("delete"), validationResults(), deleteUser);
+  .delete(deleteUser);
 
 router.route("/").get(filter("User", "project"), getUsers);
 
