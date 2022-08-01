@@ -124,7 +124,7 @@ export const editTodoData = asyncHandler(
 
 //* @desc Check a todo
 //* @route PUT /api/task/:id/todo/:id/check
-//* @access private
+//* @access `REGISTERED USER`
 export const editTodoCheck = asyncHandler(
   async (req: IAuthRequest, res: Response, next: NextFunction) => {
     const taskId = req.params.id;
