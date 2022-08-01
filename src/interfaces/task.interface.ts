@@ -1,7 +1,9 @@
-import { Document, ObjectId } from "mongoose";
+import { Document, Types } from "mongoose";
 
+// Interface
 import { ITodo } from "./";
 
+// Task status
 enum Status {
   Overdue = "Overdue",
   Completed = "Completed",
@@ -9,7 +11,7 @@ enum Status {
   Active = "Active",
 }
 
-interface ITask extends Document {
+interface ITask {
   name: string;
   slug?: string;
   description?: string;
@@ -19,10 +21,12 @@ interface ITask extends Document {
   dueDate: Date;
   completeDate?: Date;
   todos: ITodo[];
-  project: ObjectId;
-  user: ObjectId;
+  project: Types.ObjectId;
+  user: Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export { ITask, ITodo, Status };
+interface ITaskDocument extends ITask, Document {}
+
+export { ITask, Status, ITaskDocument };

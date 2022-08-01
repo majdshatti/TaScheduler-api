@@ -1,13 +1,15 @@
-import { Schema, model } from "mongoose";
-import slugify from "slugify";
+import { Schema, model, Query } from "mongoose";
 
 // Schemas
 import { todoSchema } from "./";
 // Interfaces
-import { ITask, Status } from "./../interfaces";
+import { ITask, IUserDocument, Status } from "./../interfaces";
 // Services
 import { countProjectTasks } from "../services/project.service";
+// Utils
+import slugify from "slugify";
 
+//* Task Schema
 const taskSchema = new Schema<ITask>(
   {
     name: String,
@@ -39,6 +41,7 @@ const taskSchema = new Schema<ITask>(
   { versionKey: false }
 );
 
+// Auto set slug, updatedAt and initial status before saving document
 taskSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   this.slug = slugify(this.name, { lower: true });
@@ -47,11 +50,12 @@ taskSchema.pre("save", function (next) {
   next();
 });
 
+// After saving, change the project completion counts
 taskSchema.post("save", async function () {
   await countProjectTasks(this.project);
 });
 
-//* @desc Set an initial value for the status of a task
+// Set an initial value for the status of a task
 const setInitStatus = function (sDate: Date, eDate: Date) {
   let initStatus = Status.Active;
   const startDate = new Date(sDate).getTime();

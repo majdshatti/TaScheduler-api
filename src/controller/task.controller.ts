@@ -3,39 +3,52 @@ import { Request, Response, NextFunction } from "express";
 import { asyncHandler } from "../middleware";
 // Services
 import {
-  getAllTasks,
-  getTaskBySlug,
   addTask,
   updateTask,
-  deleteTaskBySlug,
+  deleteTaskById,
   changeStatus,
+  getTaskById,
 } from "../services/task.service";
 import { countProjectTasks } from "../services/project.service";
 // Interfaces
-import { IResponse, ITask, Status, IFilterResponse } from "../interfaces";
+import {
+  IResponse,
+  ITask,
+  Status,
+  IFilterResponse,
+  IAuthRequest,
+} from "../interfaces";
 // Utils
 import { ErrorResponse, getErrorMessage, getSuccessMessage } from "../utils";
 
-//* @desc Get all tasks
+//* @desc Get all tasks that belongs to logged in user
 //* @route GET /api/task
-//* @access private
+//* @access `REGISTERED USER`
 export const getTasks = asyncHandler(
   async (req: Request, res: IFilterResponse, next: NextFunction) => {
+    // Return results of filter middleware
     res.status(200).send(res.filter);
   }
 );
 
-//* @desc Get a single task by slug
-//* @route GET /api/task/:slug
-//* @access private
+//* @desc Get a single task by id
+//* @route GET /api/task/:id
+//* @access `REGISTERED USER`
 export const getSingleTask = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const slug = req.params.slug;
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
+    const taskId = req.params.id;
+    const loggedUserId = req.user._id;
 
-    const task = await getTaskBySlug(slug);
+    // Get task
+    const task = await getTaskById(taskId);
 
+    // Check if task exists
     if (!task)
       return next(new ErrorResponse(getErrorMessage("exist", "task"), 404));
+
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
 
     res.status(200).json({
       success: true,
@@ -46,16 +59,16 @@ export const getSingleTask = asyncHandler(
 
 //* @desc Create a task
 //* @route POST /api/task
-//* @access private
+//* @access `REGISTERED USER`
 export const createTask = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    // Get body params
-    const bodyObject = req.body as ITask;
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
+    // Assign logged in user id to body to be attached with the created task
+    req.body.user = req.user._id;
 
     // Creating task
-    const task = await addTask(bodyObject);
+    const task = await addTask(req.body);
 
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       message: getSuccessMessage("create", "task"),
       data: task,
@@ -63,19 +76,26 @@ export const createTask = asyncHandler(
   }
 );
 
-//* @desc Create a task
-//* @route POST /api/task
-//* @access private
+//* @desc Edit a task by Id
+//* @route PUT /api/task/:id
+//* @access `REGISTERED USER`
 export const editTask = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const slug = req.params.slug;
-    // Get body params
-    const bodyObject = req.body as ITask;
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
+    const taskId = req.params.id;
+    const loggedUserId = req.user._id;
 
-    // Update task
-    const task = await updateTask(slug, bodyObject);
+    // Update task by body object
+    const task = await updateTask(taskId, req.body);
 
-    return res.status(201).json({
+    // Check if task exists
+    if (!task)
+      return next(new ErrorResponse(getErrorMessage("exist", "task"), 404));
+
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
+
+    res.status(201).json({
       success: true,
       message: getSuccessMessage("edit", "task"),
       data: task,
@@ -84,32 +104,46 @@ export const editTask = asyncHandler(
 );
 
 //* @desc Delete a task
-//* @route DELETE /api/task/:slug
-//* @access private
+//* @route DELETE /api/task/:id
+//* @access `REGISTERED USER`
 export const deleteTask = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const slug = req.params.slug;
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
+    const taskId = req.params.id;
+    const loggedUserId = req.user._id;
 
-    // delete task
-    const isDeleted = await deleteTaskBySlug(slug);
+    // Delete task
+    const deletedTask = await deleteTaskById(taskId);
 
-    if (!isDeleted)
+    if (!deletedTask)
       return next(new ErrorResponse(getErrorMessage("exist", "task"), 404));
 
-    return res.status(201).json({
+    // Check if task belongs to the logged user
+    if (!deletedTask.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
+
+    res.status(201).json({
       success: true,
       message: getSuccessMessage("delete", "task"),
     } as IResponse);
+
+    await countProjectTasks(deletedTask.project);
   }
 );
 
 //* @desc Change a task status
-//* @route PUT /api/task/:slug/stauts
-//* @access private
+//* @route PUT /api/task/:id/stauts
+//* @access `REGISTERED USER`
 export const completeTask = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
+    // validate middleware checks if task exists and returns task data to body
     let task = req.body.validationResults.Task;
+    const loggedUserId = req.user._id;
 
+    // Check if task belongs to the logged user
+    if (!task.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
+
+    // Change task status to completed
     task = await changeStatus(task, Status.Completed);
 
     res.status(201).json({
