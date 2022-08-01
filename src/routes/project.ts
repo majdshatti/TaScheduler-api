@@ -14,12 +14,12 @@ const router = Router();
 router
   .route("/")
   .get(filter("Project"), getProjects)
-  .post(projectValidate("edit"), validationResults(), saveProject);
+  .post(projectValidate("create"), validationResults(), saveProject);
 
 router
   .route("/:slug")
   .get(getSingleProject)
-  .put(editProject)
+  .put(projectValidate("edit"), validationResults(), editProject)
   .delete(deleteProject);
 
 export default router;

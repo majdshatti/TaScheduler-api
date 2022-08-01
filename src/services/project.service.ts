@@ -1,6 +1,6 @@
 import slugify from "slugify";
 import { ErrorResponse, getErrorMessage } from "../utils";
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 // Models
 import { Project } from "./../model";
@@ -12,17 +12,9 @@ export const getAllProjects = () => {
   return Project.find();
 };
 
-//* @desc: Get a single project by condition
+//* @desc: Get a single project by slug service
 export const getProjectBySlug = async (condition: Object) => {
-  try {
-    const project = await Project.findOne(condition).populate("user");
-
-    if (!project) return false;
-
-    return project;
-  } catch (err) {
-    return false;
-  }
+  return await Project.findOne(condition).populate("user");
 };
 
 //* @desc: Create a project service
@@ -47,28 +39,18 @@ export const updateProject = async (
     updatedAt: new Date(),
   };
 
-  try {
-    return await Project.findOneAndUpdate({ slug }, updateObject, {
-      new: true,
-    });
-  } catch (err) {
-    return false;
-  }
+  return Project.findOneAndUpdate({ slug }, updateObject, {
+    new: true,
+  });
 };
 
 //* @desc: Delete a project service
 export const deleteProjectBySlug = async (slug: string) => {
-  try {
-    const isDeleted = await Project.findOneAndRemove({ slug });
-    if (!isDeleted) return false;
-    return true;
-  } catch (err) {
-    return false;
-  }
+  return await Project.findOneAndRemove({ slug });
 };
 
 //* @desc: Count Project Tasks
-export const countProjectTasks = async (projectId: ObjectId) => {
+export const countProjectTasks = async (projectId: Types.ObjectId) => {
   let completedTasks: number = 0;
   let unCompletedTasks: number = 0;
 

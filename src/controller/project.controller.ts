@@ -4,7 +4,6 @@ import { Request, Response, NextFunction } from "express";
 import { asyncHandler } from "../middleware";
 // Services
 import {
-  getAllProjects,
   getProjectBySlug,
   createProject,
   updateProject,
@@ -13,11 +12,11 @@ import {
 // Utils
 import { ErrorResponse, getErrorMessage, getSuccessMessage } from "../utils";
 // Interfaces
-import { IFilterResponse } from "../interfaces";
+import { IAuthRequest, IFilterResponse } from "../interfaces";
 
 //* @desc Get all projects
 //* @route GET /api/project
-//* @access private
+//* @access `REGISTERED USER`
 export const getProjects = asyncHandler(
   async (req: Request, res: IFilterResponse, next: NextFunction) => {
     res.status(200).send(res.filter);
@@ -26,13 +25,16 @@ export const getProjects = asyncHandler(
 
 //* @desc Get a single project by slug
 //* @route GET /api/project/:slug
-//* @access private
+//* @access `REGISTERED USER`
 export const getSingleProject = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
     const slug = req.params.slug;
+    const loggedUserId = req.user._id;
 
+    // Find project
     const project = await getProjectBySlug({ slug });
 
+    // Check if project exist
     if (!project)
       return next(new ErrorResponse(getErrorMessage("exist", slug), 404));
 
@@ -45,9 +47,15 @@ export const getSingleProject = asyncHandler(
 
 //* @desc Create a project
 //* @route POST /api/project
-//* @access private
+//* @access `REGISTERED USER`
 export const saveProject = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
+    const loggedUserId = req.user._id;
+
+    // Assign logged in user id to the project
+    req.body.user = loggedUserId;
+
+    // Create a project
     const project = await createProject(req.body);
 
     res.status(201).json({
@@ -60,19 +68,29 @@ export const saveProject = asyncHandler(
 
 //* @desc Edit project details
 //* @route PUT /api/project/:slug
-//* @access private
+//* @access `REGISTERED USER`
 export const editProject = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
     const slug = req.params.slug;
+    const loggedUserId = req.user._id;
 
-    const project = await updateProject(slug, req.body);
+    // Find project
+    const project = await getProjectBySlug({ slug });
 
+    // Check if project exist
     if (!project)
-      return next(new ErrorResponse(getErrorMessage("exist", "project"), 404));
+      return next(new ErrorResponse(getErrorMessage("exist", slug), 404));
+
+    // Check if task belongs to the logged user
+    if (!project.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
+
+    // Update Project
+    const newProject = await updateProject(slug, req.body);
 
     return res.status(200).json({
       success: true,
-      data: project,
+      data: newProject,
       message: getSuccessMessage("edit", "project"),
     });
   }
@@ -80,10 +98,22 @@ export const editProject = asyncHandler(
 
 //* @desc Delete a project
 //* @route DELETE /api/project/:slug
-//* @access private
+//* @access `REGISTERED USER`
 export const deleteProject = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: IAuthRequest, res: Response, next: NextFunction) => {
     const slug = req.params.slug;
+    const loggedUserId = req.user._id;
+
+    // Find project
+    const project = await getProjectBySlug({ slug });
+
+    // Check if project exist
+    if (!project)
+      return next(new ErrorResponse(getErrorMessage("exist", slug), 404));
+
+    // Check if task belongs to the logged user
+    if (!project.user.equals(loggedUserId))
+      return next(new ErrorResponse(getErrorMessage("auth", "task"), 401));
 
     const isDeleted = await deleteProjectBySlug(slug);
 

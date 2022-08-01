@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
+import { Document, Types } from "mongoose";
 
 import { ITask } from "./";
 enum Status {
@@ -7,12 +7,12 @@ enum Status {
   Hold = "Hold",
 }
 
-interface IProject extends Document {
+interface IProject {
   name: string;
   slug?: string;
   description?: string;
   status: Status;
-  user: ObjectId;
+  user: Types.ObjectId;
   completedTasksCount: number;
   unCompletedTasksCount: number;
   createdAt?: Date;
@@ -20,4 +20,6 @@ interface IProject extends Document {
   tasks: ITask[];
 }
 
-export default IProject;
+interface IProjectDocument extends IProject, Document {}
+
+export { IProject, IProjectDocument };

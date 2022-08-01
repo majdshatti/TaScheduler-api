@@ -14,8 +14,9 @@ const projectValidate = (validationCase: "edit" | "create") => {
       ];
     case "edit":
       return [
-        validate("name").isUnique("Project").isString().exec(),
+        validate("name").optional().isUnique("Project").isString().exec(),
         validate("description")
+          .optional()
           .isRequired()
           .isString()
           .isLength(10, 200)

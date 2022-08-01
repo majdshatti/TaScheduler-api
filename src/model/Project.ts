@@ -1,9 +1,9 @@
 import { Schema, model } from "mongoose";
 import slugify from "slugify";
 // Interfaces
-import { IProject } from "../interfaces";
+import { IProjectDocument } from "../interfaces";
 
-const projectSchema = new Schema<IProject>(
+const projectSchema = new Schema<IProjectDocument>(
   {
     name: String,
     slug: String,
@@ -42,5 +42,5 @@ projectSchema.pre("save", function (next) {
   next();
 });
 
-const Project = model<IProject>("Project", projectSchema);
+const Project = model<IProjectDocument>("Project", projectSchema);
 export default Project;
