@@ -1,34 +1,34 @@
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
-import { IFilterResponse } from "../interfaces";
+import { IAuthRequest } from "../interfaces";
 
 const filter =
   (model: string, populate?: string) =>
   async (req: Request, res: Response | any, next: NextFunction) => {
     let query;
+    const request = req as IAuthRequest;
 
     const reqQuery = { ...req.query };
 
-    // Don't need to filter over select, sort, page, ..etc
-    const removeFields = [
-      "select",
-      "sort",
-      "page",
-      "limit",
-      "like",
-      "populate",
-    ];
+    // Don't filter over query operators
+    const removeFields = ["select", "sort", "page", "limit", "populate"];
+
     removeFields.forEach(param => delete reqQuery[param]);
 
     // Greate than, less than, ..etc queries support
     let queryStr = JSON.stringify(reqQuery);
+
     queryStr = queryStr.replace(
-      /\b(gt|gte|lt|lte|in|regex)\b/g,
+      /\b(gt|gte|lt|lte|in)\b/g,
       match => `$${match}`
     );
 
     // Reparse the json string after cleaning
     let params = JSON.parse(queryStr);
+
+    if (model === "Task" || model === "Project") {
+      params.user = request.user._id;
+    }
 
     query = mongoose.model(model).find(params);
 
