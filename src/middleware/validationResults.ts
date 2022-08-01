@@ -55,7 +55,6 @@ const results = () => (req: Request, res: Response, next: NextFunction) => {
       errors: unMatchedFields,
     });
   }
-  console.log(validatedData, unMatchedFields);
 
   next();
 };
