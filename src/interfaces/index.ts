@@ -1,29 +1,35 @@
 import { IUser, IUserDocument } from "./user.interface";
-import { ITask, Status } from "./task.interface";
-import ITodo from "./todo.interface";
-import IProject from "./project.interface";
+import { ITask, ITaskDocument, Status } from "./task.interface";
+import { ITodo, ITodoDocument } from "./todo.interface";
+import { IProject, IProjectDocument } from "./project.interface";
+import { IFilterResponse, IResponse } from "./response.interface";
+import { IAuthRequest } from "./request.interface";
+import { IMailOptions } from "./email.intreface";
+
+// Socket.io Interfaces
 import {
   ServerToClientEvents,
   InterServerEvents,
   ClientToServerEvents,
   SocketData,
 } from "./socket.interface";
-import { IFilterResponse, IAuthRequest, IResponse } from "./response.interface";
-import { IMailOptions } from "./email.intreface";
 
 export {
+  IAuthRequest,
   IResponse,
+  IFilterResponse,
   IUser,
+  IUserDocument,
   ITask,
+  ITaskDocument,
   IProject,
+  IProjectDocument,
   ITodo,
+  ITodoDocument,
+  IMailOptions,
   Status,
   ServerToClientEvents,
   InterServerEvents,
   ClientToServerEvents,
   SocketData,
-  IFilterResponse,
-  IAuthRequest,
-  IUserDocument,
-  IMailOptions,
 };
