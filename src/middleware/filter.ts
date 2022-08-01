@@ -26,6 +26,7 @@ const filter =
     // Reparse the json string after cleaning
     let params = JSON.parse(queryStr);
 
+    // Filter by user id to get his projects and tasks
     if (model === "Task" || model === "Project") {
       params.user = request.user._id;
     }
@@ -48,12 +49,12 @@ const filter =
       query = query.sort("-createdAt");
     }
 
+    // PAGINATION
     const pagination = { next: {}, prev: {} };
     const total = await query.clone().countDocuments();
 
     let pageCount = 1;
 
-    // PAGINATION
     if (req.query.limit) {
       let page: number = 1;
       let limit: number = 10;
