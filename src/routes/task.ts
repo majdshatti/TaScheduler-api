@@ -31,16 +31,16 @@ const router = Router();
 //*************************************/
 
 router
-  .route("/:slug/todo/:todoId/check")
+  .route("/:id/todo/:todoId/check")
   .put(todoValidate("check"), validationResults(), editTodoCheck);
 
 router
-  .route("/:slug/todo/:todoId")
+  .route("/:id/todo/:todoId")
   .put(todoValidate("edit"), validationResults(), editTodoData)
   .delete(todoValidate("delete"), validationResults(), removeTodo);
 
 router
-  .route("/:slug/todo")
+  .route("/:id/todo")
   .post(todoValidate("create"), validationResults(), addTodo);
 
 //*************************************/
@@ -48,14 +48,14 @@ router
 //*************************************/
 
 router
-  .route("/:slug/complete")
+  .route("/:id/complete")
   .put(taskValidate("complete"), validationResults(), completeTask);
 
 router
-  .route("/:slug")
+  .route("/:id")
   .get(getSingleTask)
   .put(taskValidate("edit"), validationResults(), editTask)
-  .delete(deleteTask);
+  .delete(taskValidate("delete"), validationResults(), deleteTask);
 
 router
   .route("/")
