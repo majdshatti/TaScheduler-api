@@ -1,13 +1,14 @@
 import { langType } from "./../types";
-import { Response, Request } from "express";
-import { IUser } from "./";
+import { Response } from "express";
 
+// Forming errors object interface
 interface IError {
   message: string;
   value?: string;
   field?: string;
 }
 
+// Forming a response to the client
 export interface IResponse {
   success: boolean;
   message?: string | langType;
@@ -15,6 +16,7 @@ export interface IResponse {
   errors?: IError[];
 }
 
+// An interface for holding res.filter
 export interface IFilterResponse extends Response {
   filter: {
     success: boolean;
@@ -23,10 +25,6 @@ export interface IFilterResponse extends Response {
     pagination: Object;
     data: Object;
   };
-}
-
-export interface IAuthRequest extends Request {
-  user: IUser;
 }
 
 export default IResponse;
