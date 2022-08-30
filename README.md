@@ -11,8 +11,8 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 - Multiple projects with multiple tasks.
 - Each task can have multiple todos.
 - Node cron tasks for checking task status (overdue, completed and started).
-- Supports real time notifications (under development).
-- Multiple languages for server respones only.
+- Supports real time notifications (only a message sent to the client when an event is triggered).
+- Multiple languages for server response messages only.
 
 ### Installation Guide
 
