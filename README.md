@@ -11,12 +11,12 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 - Multiple projects with multiple tasks.
 - Each task can have multiple todos.
 - Node cron tasks for checking task status (overdue, completed and started).
-- Supports real time notifications (only a message sent to the client when an event is triggered).
-- Multiple languages for server response messages only.
+- Supports real time notifications (under development).
+- Multiple languages for server respones only.
 
 ### Installation Guide
 
-- Get the bot [here](https://discord.com/api/oauth2/authorize?client_id=1014203508217626674&permissions=2147485696&scope=bot%20applications.commands).
+- Clone this repository [here](https://github.com/majdshatti/TaScheduler-api.git).
 - Run npm install to install all dependencies.
 - Mongodb database is required.
 - Create a config.env file in your project src folder and add your variables. See the environment.d typescript file for assistance.
