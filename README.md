@@ -1,6 +1,6 @@
 # TaScheduler-api
 
-![alt text](https://www.dropbox.com/s/vpywgkeiok5ln1j/TaScheduler.png?dl=0)
+![alt text](https://raw.githubusercontent.com/majdshatti/TaScheduler-api/main/.github/TaScheduler.png)
 
 ### Introduction
 
