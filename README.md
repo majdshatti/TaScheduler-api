@@ -1,5 +1,7 @@
 # TaScheduler-api
 
+![alt text](https://www.dropbox.com/s/vpywgkeiok5ln1j/TaScheduler.png?dl=0)
+
 ### Introduction
 
 TaScheduler API is a backend project that provides clients with multiple endpoints for scheduling and managing a user's tasks.
