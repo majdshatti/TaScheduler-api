@@ -16,7 +16,7 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 
 ### Installation Guide
 
-- Clone this repository [here](https://github.com/majdshatti/TaScheduler-api.git).
+- Get the bot [here](https://discord.com/api/oauth2/authorize?client_id=1014203508217626674&permissions=2147485696&scope=bot%20applications.commands).
 - Run npm install to install all dependencies.
 - Mongodb database is required.
 - Create a config.env file in your project src folder and add your variables. See the environment.d typescript file for assistance.
@@ -35,7 +35,7 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 | POST       | /api/auth/register             | Create a new user account                       |
 | POST       | /api/auth/login                | Login an existing user account                  |
 | POST       | /api/auth/forgotpassword       | Request a reset password to an existing account |
-| POST       | /api/auth/resetpassword/:token | Request a reset password to an existing account |
+| POST       | /api/auth/resetpassword/:token | Set a new password                              |
 
 #### Authenticated Endpoints
 
