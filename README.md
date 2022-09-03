@@ -16,18 +16,6 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 - Supports real time notifications (under development).
 - Multiple languages for server respones only.
 
-### Installation Guide
-
-- Clone this repository [here](https://github.com/majdshatti/TaScheduler-api.git).
-- Run npm install to install all dependencies.
-- Mongodb database is required.
-- Create a config.env file in your project src folder and add your variables. See the environment.d typescript file for assistance.
-
-### Usage
-
-- Run npm run dev to start the server.
-- Connect to the API using Postman on port 3001.
-
 ### API Endpoints
 
 #### Un Authenticated User Endpoints
