@@ -4,13 +4,9 @@
 
 ## Introduction
 
----
-
 TaScheduler API is a backend project that provides clients with multiple endpoints for scheduling and managing a user's tasks.
 
 ## TaScheduler-api features
-
----
 
 - Authenticated and Authorized.
 - Reset password.
@@ -21,8 +17,6 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 - Multiple languages for server respones only.
 
 ### API Endpoints
-
----
 
 ### Un Authenticated User Endpoints
 
@@ -73,8 +67,6 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 
 ## Technologies Used
 
----
-
 - [NodeJS](https://nodejs.org/) This is a cross-platform runtime environment built on Chrome's V8 JavaScript engine used in running JavaScript codes on the server. It allows for installation and managing of dependencies and communication with databases.
 - [ExpressJS](https://www.expresjs.org/) This is a NodeJS web application framework.
 - [MongoDB](https://www.mongodb.com/) This is a free open source NOSQL document database with scalability and flexibility. Data are stored in flexible JSON-like documents.
@@ -82,7 +74,5 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 - [Socket.io](https://socket.io) Socket.IO is an event-driven library for real-time web applications.
 
 ## Authors
-
----
 
 - [Majd Al-Shatti](https://github.com/majdshatti)
