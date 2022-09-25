@@ -16,7 +16,7 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 - Supports real time notifications (under development).
 - Multiple languages for server respones only.
 
-### API Endpoints
+## API Endpoints
 
 ### Un Authenticated User Endpoints
 
@@ -27,9 +27,9 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 | POST       | /api/auth/forgotpassword       | Request a reset password to an existing account |
 | POST       | /api/auth/resetpassword/:token | Set a new password                              |
 
-#### Authenticated Endpoints
+### Authenticated Endpoints
 
-##### User Endpoints
+#### User Endpoints
 
 | HTTP Verbs | Endpoints          | Action                                             |
 | ---------- | ------------------ | -------------------------------------------------- |
@@ -40,7 +40,7 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 | PUT        | /api/user          | Edit User profile                                  |
 | DELETE     | /api/user          | Delete user account                                |
 
-##### Project Endpoints
+#### Project Endpoints
 
 | HTTP Verbs | Endpoints             | Action                                                |
 | ---------- | --------------------- | ----------------------------------------------------- |
@@ -50,7 +50,7 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 | PUT        | /api/project          | Edit a project informations                           |
 | DELETE     | /api/project          | Delete project account                                |
 
-##### Task Endpoints
+#### Task Endpoints
 
 | HTTP Verbs | Endpoints                        | Action                                             |
 | ---------- | -------------------------------- | -------------------------------------------------- |
