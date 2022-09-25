@@ -2,11 +2,15 @@
 
 ![alt text](src/.github/TaScheduler.png)
 
-### Introduction
+## Introduction
+
+---
 
 TaScheduler API is a backend project that provides clients with multiple endpoints for scheduling and managing a user's tasks.
 
-### TaScheduler-api features
+## TaScheduler-api features
+
+---
 
 - Authenticated and Authorized.
 - Reset password.
@@ -16,21 +20,27 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 - Supports real time notifications (under development).
 - Multiple languages for server respones only.
 
-### Installation Guide
+## Installation Guide
+
+---
 
 - Clone this repository [here](https://github.com/majdshatti/TaScheduler-api.git).
 - Run npm install to install all dependencies.
 - Mongodb database is required.
 - Create a config.env file in your project src folder and add your variables. See the environment.d typescript file for assistance.
 
-### Usage
+## Usage
+
+---
 
 - Run npm run dev to start the server.
 - Connect to the API using Postman on port 3001.
 
-### API Endpoints
+## API Endpoints
 
-#### Un Authenticated User Endpoints
+---
+
+### Un Authenticated User Endpoints
 
 | HTTP Verbs | Endpoints                      | Action                                          |
 | ---------- | ------------------------------ | ----------------------------------------------- |
@@ -77,7 +87,9 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 | DELETE     | /api/task                        | Delete task account                                |
 | DELETE     | /api/task/:id/todo/:todoId       | Remove a todo from task                            |
 
-### Technologies Used
+## Technologies Used
+
+---
 
 - [NodeJS](https://nodejs.org/) This is a cross-platform runtime environment built on Chrome's V8 JavaScript engine used in running JavaScript codes on the server. It allows for installation and managing of dependencies and communication with databases.
 - [ExpressJS](https://www.expresjs.org/) This is a NodeJS web application framework.
@@ -85,6 +97,8 @@ TaScheduler API is a backend project that provides clients with multiple endpoin
 - [Mongoose](https://mongoosejs.com/) Mongoose provides a straight-forward, schema-based solution to model your application data. It includes built-in type casting, validation, query building, business logic hooks and more, out of the box.
 - [Socket.io](https://socket.io) Socket.IO is an event-driven library for real-time web applications.
 
-### Authors
+## Authors
+
+---
 
 - [Majd Al-Shatti](https://github.com/majdshatti)
